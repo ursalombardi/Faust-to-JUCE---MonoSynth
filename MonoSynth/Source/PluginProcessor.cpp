@@ -11,6 +11,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "FaustSynth.h"
+#include <iostream>
 
 //==============================================================================
 MonoSynthAudioProcessor::MonoSynthAudioProcessor()
@@ -157,13 +158,41 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+
     fDSP->compute(buffer.getNumSamples(), NULL, outputs);
+
+    for (const auto metadata : midiMessages)
+    {
+        const auto message = metadata.getMessage();
+        const auto timestamp = metadata.samplePosition;
+
+        if (message.isNoteOn())
+        {
+            int noteNumber = message.getNoteNumber();
+            int velocity = message.getVelocity();
+            // Do something with the note-on message
+            DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);
+            setGate(true);
+            setFreq(message.getMidiNoteInHertz(noteNumber));
+            noteOnMessages++;
+        }
+        
+        if (message.isNoteOff())
+        {
+            noteOnMessages--;
+        }
+
+        if (noteOnMessages == 0) {
+            setGate(false);
+        }
+    }
 
     for (int channel = 0; channel < totalNumOutputChannels; ++channel) {
         for (int i = 0; i < buffer.getNumSamples(); i++) {
             *buffer.getWritePointer(channel, i) = outputs[channel][i];
         }
     }
+
 }
 
 //==============================================================================

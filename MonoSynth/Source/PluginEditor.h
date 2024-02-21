@@ -30,7 +30,6 @@ private:
     juce::Slider gainSlider;
     juce::Slider cutoffSlider;
     juce::ToggleButton onOffButton;
-    juce::MouseListener* mouse;
 
     juce::Label frequencyLabel;
     juce::Label gainLabel;

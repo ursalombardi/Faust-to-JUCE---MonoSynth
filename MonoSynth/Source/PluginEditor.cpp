@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <iostream>
 
 //==============================================================================
 MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProcessor& p)
@@ -21,9 +22,10 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     frequencySlider.setRange(50.0, 5000.0, 0.01);
     frequencySlider.setNumDecimalPlacesToDisplay(2);
     frequencySlider.setSkewFactorFromMidPoint(500.0);
-    frequencySlider.setValue(300);
+    frequencySlider.setValue(400);
     frequencySlider.onValueChange = [this] {
         audioProcessor.setFreq(frequencySlider.getValue());  
+
     };
 
     addAndMakeVisible(frequencyLabel);
@@ -72,7 +74,6 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     addAndMakeVisible(gainLabel);
     gainLabel.setText("Gain", juce::NotificationType::dontSendNotification);
     gainLabel.attachToComponent(&gainSlider, true);
-
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
