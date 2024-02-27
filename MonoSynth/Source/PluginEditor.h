@@ -25,17 +25,27 @@ public:
     void resized() override;
    
 private:
-
+    // Sliders and Buttons
     juce::Slider frequencySlider; 
     juce::Slider gainSlider;
-    juce::Slider cutoffSlider;
     juce::ToggleButton onOffButton;
+    juce::Slider moogfrSlider;
+    juce::Slider moogfrSlider2;
+    juce::Slider moogResSlider;
+    juce::Slider moogResSlider2;
 
+    // Labels
     juce::Label frequencyLabel;
     juce::Label gainLabel;
-    juce::Label cutoffLabel;
     juce::Label onOffLabel;
+    juce::Label moogfrLabel;
+    juce::Label moogfrLabel2;
+    juce::Label moogResLabel;
+    juce::Label moogResLabel2;
 
+    juce::Label testLabel;
+
+    juce::Image backgroundImage;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

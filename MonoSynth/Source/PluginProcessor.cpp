@@ -36,9 +36,17 @@ void MonoSynthAudioProcessor::setFreq(float freq) { fUI->setParamValue("freq", f
 
 void MonoSynthAudioProcessor::setGain(float gain) { fUI->setParamValue("gain", gain); }
 
-void MonoSynthAudioProcessor::setCutoff(float cutoff) { fUI->setParamValue("cutoff", cutoff); }
+void MonoSynthAudioProcessor::setCutoff(float cutoff) { fUI->setParamValue("cutoff", 5000); }
 
 void MonoSynthAudioProcessor::setGate(bool gate) { fUI->setParamValue("gate", gate ? 1: 0); }
+
+void MonoSynthAudioProcessor::setMoogfr(float fr) { fUI->setParamValue("fr", fr); }
+
+void MonoSynthAudioProcessor::setMoogfr2(float fr2) { fUI->setParamValue("fr2", fr2); }
+
+void MonoSynthAudioProcessor::setMoogRes(float res) { fUI->setParamValue("res", res); }
+
+void MonoSynthAudioProcessor::setMoogRes2(float res2) { fUI->setParamValue("res2", res2); }
 
 //==============================================================================
 const juce::String MonoSynthAudioProcessor::getName() const
@@ -158,8 +166,8 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-
     fDSP->compute(buffer.getNumSamples(), NULL, outputs);
+
 
     for (const auto metadata : midiMessages)
     {
@@ -168,15 +176,35 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
         if (message.isNoteOn())
         {
-            int noteNumber = message.getNoteNumber();
+            noteNumber = message.getNoteNumber();
+            noteNumberInHertz = message.getMidiNoteInHertz(noteNumber);
             int velocity = message.getVelocity();
             // Do something with the note-on message
-            DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);
+            //DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);
             setGate(true);
-            setFreq(message.getMidiNoteInHertz(noteNumber));
             noteOnMessages++;
+            currentNoteInHertz = noteNumberInHertz;
         }
-        
+
+       if (message.isPitchWheel()) {
+            
+            if (message.getPitchWheelValue() > 8192) {
+                double x = message.getPitchWheelValue();
+                currentNoteInHertz = noteNumberInHertz * ( (1.0 / 8191) * (x - 8192) + 1);
+                //DBG(currentNoteInHertz);
+            }
+            if (message.getPitchWheelValue() <= 8192) {
+                currentNoteInHertz = noteNumberInHertz * ((0.5 / 8192) * message.getPitchWheelValue() + 0.5);
+            }
+       }
+
+       if (message.isSustainPedalOn()) {
+           DBG("back");
+       }
+       if (message.isSustainPedalOff()) {
+           currentNoteInHertz *= 4;
+       }
+
         if (message.isNoteOff())
         {
             noteOnMessages--;
@@ -186,6 +214,8 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             setGate(false);
         }
     }
+
+    setFreq(currentNoteInHertz);
 
     for (int channel = 0; channel < totalNumOutputChannels; ++channel) {
         for (int i = 0; i < buffer.getNumSamples(); i++) {

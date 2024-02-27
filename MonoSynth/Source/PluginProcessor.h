@@ -27,6 +27,10 @@ public:
     void setGain(float gain);
     void setCutoff(float cutoff);
     void setGate(bool gate);
+    void setMoogfr(float fr);
+    void setMoogfr2(float fr2);
+    void setMoogRes(float res);
+    void setMoogRes2(float res2);
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -61,6 +65,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    double currentNoteInHertz = 300;
+    int noteNumber;
+    double noteNumberInHertz;
     bool apNoteOn = false;
     int noteOnMessages = 0;
 

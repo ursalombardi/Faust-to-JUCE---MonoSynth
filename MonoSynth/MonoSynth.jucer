@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="wh8Z1x" name="MonoSynth" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              pluginCharacteristicsValue="pluginWantsMidiIn">
   <MAINGROUP id="sLpa8u" name="MonoSynth">
     <GROUP id="{555E4995-4E82-F9D1-5A24-96AB87B97885}" name="Source">
       <FILE id="vhOsdO" name="SynthSound.cpp" compile="1" resource="0" file="Source/SynthSound.cpp"/>
@@ -16,6 +17,9 @@
       <FILE id="bG7nvZ" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="Ei0HND" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+    <GROUP id="{7ABED26C-B874-2B30-861F-E7AE100EE165}" name="Image">
+      <FILE id="jpR20E" name="gile.JPG" compile="0" resource="1" file="Image/gile.JPG"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
