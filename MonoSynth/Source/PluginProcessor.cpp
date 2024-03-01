@@ -126,12 +126,14 @@ void MonoSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 void MonoSynthAudioProcessor::releaseResources()
 {
+    /*
     delete fDSP; 
     delete fUI;
     for (int channel = 0; channel < 2; ++channel) {
         delete[] outputs[channel];
     }
     delete[] outputs;
+    */
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations

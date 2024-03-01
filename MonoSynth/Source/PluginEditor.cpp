@@ -16,10 +16,13 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(800, 240);
+    setSize(500, 500);
 
     backgroundImage = juce::ImageCache::getFromMemory(BinaryData::gile_JPG, BinaryData::gile_JPGSize);
 
+    int controlTextBoxWidth = 80;
+
+    
     // Freqency 
     addAndMakeVisible(frequencySlider);
     frequencySlider.setRange(50.0, 5000.0, 0.01);
@@ -44,51 +47,66 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     gainLabel.setText("Gain", juce::NotificationType::dontSendNotification);
     gainLabel.attachToComponent(&gainSlider, true);
 
+    
+    
     // Moog Filter 1
     addAndMakeVisible(moogfrSlider);
+    moogfrSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     moogfrSlider.setRange(200.0, 4000.0);
     moogfrSlider.setValue(200.0);
+    moogfrSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
+    moogfrSlider.setNumDecimalPlacesToDisplay(2);
     moogfrSlider.onValueChange = [this] {
         audioProcessor.setMoogfr(moogfrSlider.getValue());
     };
     addAndMakeVisible(moogfrLabel);
-    moogfrLabel.setText("Moog fr", juce::NotificationType::dontSendNotification);
-    moogfrLabel.attachToComponent(&moogfrSlider, true);
+    moogfrLabel.setText("Frequency 1", juce::NotificationType::dontSendNotification);
+    moogfrLabel.attachToComponent(&moogfrSlider, false);
 
     // Moog Filter 2
     addAndMakeVisible(moogfrSlider2);
+    moogfrSlider2.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     moogfrSlider2.setRange(200.0, 4000.0);
     moogfrSlider2.setValue(2000.0);
+    moogfrSlider2.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
+    moogfrSlider2.setNumDecimalPlacesToDisplay(2);
     moogfrSlider2.onValueChange = [this] {
         audioProcessor.setMoogfr(moogfrSlider2.getValue());
         };
     addAndMakeVisible(moogfrLabel2);
-    moogfrLabel2.setText("Moog fr2", juce::NotificationType::dontSendNotification);
-    moogfrLabel2.attachToComponent(&moogfrSlider2, true);
+    moogfrLabel2.setText("Frequency 2", juce::NotificationType::dontSendNotification);
+    moogfrLabel2.attachToComponent(&moogfrSlider2, false);
 
     // Moog Res 1
     addAndMakeVisible(moogResSlider);
+    moogResSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     moogResSlider.setRange(0.0, 1.0);
     moogResSlider.setValue(0.7);
+    moogResSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
+    moogResSlider.setNumDecimalPlacesToDisplay(2);
     moogResSlider.onValueChange = [this] {
         audioProcessor.setMoogRes(moogResSlider.getValue());
         };
     addAndMakeVisible(moogResLabel);
-    moogResLabel.setText("Moog Res", juce::NotificationType::dontSendNotification);
-    moogResLabel.attachToComponent(&moogResSlider, true);
+    moogResLabel.setText("Resonance 1", juce::NotificationType::dontSendNotification);
+    moogResLabel.attachToComponent(&moogResSlider, false);
 
     // Moog Res 2
     addAndMakeVisible(moogResSlider2);
+    moogResSlider2.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     moogResSlider2.setRange(0.0, 1.0);
     moogResSlider2.setValue(0.5);
+    moogResSlider2.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
+    moogResSlider2.setNumDecimalPlacesToDisplay(2);
     moogResSlider2.onValueChange = [this] {
         audioProcessor.setMoogRes(moogResSlider2.getValue());
         };
     addAndMakeVisible(moogResLabel2);
-    moogResLabel2.setText("Moog Res", juce::NotificationType::dontSendNotification);
-    moogResLabel2.attachToComponent(&moogResSlider2, true);
+    moogResLabel2.setText("Resonance 2", juce::NotificationType::dontSendNotification);
+    moogResLabel2.attachToComponent(&moogResSlider2, false);
 
-    // On/Off button
+    /*
+    * // On/Off button
     addAndMakeVisible(onOffButton);
     onOffButton.setTriggeredOnMouseDown(true);
     onOffButton.setToggleState(audioProcessor.noteOnMessages != 0, juce::NotificationType::dontSendNotification);
@@ -98,6 +116,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     addAndMakeVisible(onOffLabel);
     onOffLabel.setText("On/Off", juce::NotificationType::dontSendNotification);
     onOffLabel.attachToComponent(&onOffButton, true);
+    */
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
@@ -108,23 +127,35 @@ MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
 void MonoSynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.drawImageAt(backgroundImage, 20, -30);
-    //g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+   
+    // King Giles  
+    g.drawImageAt(backgroundImage, 0, -30);
+    
+    juce::Rectangle<int> bounds = getLocalBounds();
 
-   // g.setColour (juce::Colours::blue);
+    // Define the colors for the sunset gradient
+    juce::Colour color1 = juce::Colour::fromFloatRGBA(0.1f, 0.1f, 0.2f, 1.0f); // Dark navy blue
+    juce::Colour color2 = juce::Colour::fromFloatRGBA(0.2f, 0.2f, 0.3f, 0.9f); // Light gray
+
+    // Create a LinearGradient object for the gradient
+    juce::ColourGradient gradient(color1, 0, 0, color2, 0, static_cast<float>(bounds.getHeight()), false);
+
+    // Fill the background with the gradient
+    g.setGradientFill(gradient);
+    g.fillRect(bounds);
+    // King Giles  
+    //g.drawImageAt(backgroundImage, 0, -30);
 }
 
 void MonoSynthAudioProcessorEditor::resized()
 {
-    const int sliderLeft = 80;
-    frequencySlider.setBounds(sliderLeft, 10, getWidth() - sliderLeft - 20, 20);
-    gainSlider.setBounds(sliderLeft, 40, getWidth() - sliderLeft - 20, 20);
-    moogfrSlider.setBounds(sliderLeft, 70, getWidth() - sliderLeft - 20, 20);
-    moogfrSlider2.setBounds(sliderLeft, 100, getWidth() - sliderLeft - 20, 20);
-    moogResSlider.setBounds(sliderLeft, 130, getWidth() - sliderLeft - 20, 20);
-    moogResSlider2.setBounds(sliderLeft, 160, getWidth() - sliderLeft - 20, 20);
-
-    onOffButton.setBounds(sliderLeft, 190, getWidth() - sliderLeft - 20, 20);
-
-    testLabel.setBounds(sliderLeft, 210, getWidth() - sliderLeft - 20, 20);
+    //frequencySlider.setBounds(sliderLeft, 10, getWidth() - sliderLeft - 20, 20);
+    //gainSlider.setBounds(sliderLeft, 40, getWidth() - sliderLeft - 20, 20);
+    //onOffButton.setBounds(sliderLeft, 190, getWidth() - sliderLeft - 20, 20);
+    int leftOffset = 20; 
+    int topOffset = 35;
+    moogfrSlider.setBounds(leftOffset, topOffset, 200, 200);
+    moogfrSlider2.setBounds(leftOffset + getWidth() / 2, topOffset, 200, 200);
+    moogResSlider.setBounds(leftOffset, topOffset + getHeight() / 2, 200, 200);
+    moogResSlider2.setBounds(leftOffset + getWidth() / 2, topOffset + getHeight() / 2, 200, 200);
 }
