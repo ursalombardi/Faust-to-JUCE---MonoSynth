@@ -188,21 +188,26 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
     fDSP->compute(buffer.getNumSamples(), NULL, outputs);
 
-
     for (const auto metadata : midiMessages)
     {
         const auto message = metadata.getMessage();
         const auto timestamp = metadata.samplePosition;
+
+        if (message.isNoteOff())
+        {
+            if (message.getNoteNumber() == currentNoteNumber)
+                setGate(false);
+        }
 
         if (message.isNoteOn())
         {
             noteNumber = message.getNoteNumber();
             noteNumberInHertz = message.getMidiNoteInHertz(noteNumber);
             int velocity = message.getVelocity();
-            // Do something with the note-on message
-            //DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);
+            DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);
             setGate(true);
             noteOnMessages++;
+            currentNoteNumber = noteNumber;
             currentNoteInHertz = noteNumberInHertz;
         }
 
@@ -210,15 +215,19 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             
             if (message.getPitchWheelValue() > 8192) {
                 double x = message.getPitchWheelValue();
-                currentNoteInHertz = noteNumberInHertz * ( (1.0 / 8191) * (x - 8192) + 1);
+                pitchWheelMultiplier = ( (1.0 / 8191) * (x - 8192) + 1);
             }
             if (message.getPitchWheelValue() <= 8192) {
-                currentNoteInHertz = noteNumberInHertz * ((0.5 / 8192) * message.getPitchWheelValue() + 0.5);
+                pitchWheelMultiplier = ((0.5 / 8192) * message.getPitchWheelValue() + 0.5);
             }
        }
 
        if (message.isSustainPedalOff()) {
-           currentNoteInHertz *= 4;
+           sustainPedalMulitplier = 1;
+       }
+
+       if (message.isSustainPedalOn()) {
+           sustainPedalMulitplier = 4;
        }
 
         if (message.isNoteOff())
@@ -231,7 +240,7 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
         }
     }
 
-    setFreq(currentNoteInHertz);
+    setFreq(currentNoteInHertz * pitchWheelMultiplier * sustainPedalMulitplier);
 
     for (int channel = 0; channel < totalNumOutputChannels; ++channel) {
         for (int i = 0; i < buffer.getNumSamples(); i++) {

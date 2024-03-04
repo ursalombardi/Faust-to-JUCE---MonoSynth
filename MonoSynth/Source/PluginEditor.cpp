@@ -68,7 +68,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     moogfrSlider2.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
     moogfrSlider2.setNumDecimalPlacesToDisplay(2);
     moogfrSlider2.onValueChange = [this] {
-        audioProcessor.setMoogfr(moogfrSlider2.getValue());
+        audioProcessor.setMoogfr2(moogfrSlider2.getValue());
         };
     addAndMakeVisible(moogfrLabel2);
     moogfrLabel2.setText("Frequency 2", juce::NotificationType::dontSendNotification);

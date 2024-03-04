@@ -23,15 +23,6 @@ public:
     MonoSynthAudioProcessor();
     ~MonoSynthAudioProcessor() override;
 
-    void setFreq(float freq);
-    void setGain(float gain);
-    void setCutoff(float cutoff);
-    void setGate(bool gate);
-    void setMoogfr(float fr);
-    void setMoogfr2(float fr2);
-    void setMoogRes(float res);
-    void setMoogRes2(float res2);
-
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -64,10 +55,28 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-    
-    double currentNoteInHertz = 300;
+
+    //==============================================================================
+    void setFreq(float freq);
+    void setGain(float gain);
+    void setCutoff(float cutoff);
+    void setGate(bool gate);
+    void setMoogfr(float fr);
+    void setMoogfr2(float fr2);
+    void setMoogRes(float res);
+    void setMoogRes2(float res2);
+
     int noteNumber;
+    double pitchWheelValue = 8192.0;
     double noteNumberInHertz;
+   
+    int currentNoteNumber;
+    double currentNoteInHertz = 300.0;
+
+    double pitchWheelMultiplier = 1;
+    double sustainPedalMulitplier = 1;
+    
+    
     bool apNoteOn = false;
     int noteOnMessages = 0;
     bool releaseResourcesFlag = false;
@@ -75,6 +84,7 @@ public:
 private:
     MapUI* fUI;
     dsp* fDSP;
+    
     float** outputs; // double array (one dimension for audio channels and one for audio samples/buffers)
 
     //==============================================================================
