@@ -126,14 +126,32 @@ void MonoSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 void MonoSynthAudioProcessor::releaseResources()
 {
-    /*
-    delete fDSP; 
-    delete fUI;
-    for (int channel = 0; channel < 2; ++channel) {
-        delete[] outputs[channel];
+    // If this is called twice, as it may be in juce_audio_plugin_client_vst3.cpp, removing an instance of the plugin
+    // will crash the DAW. The nullptr check worked for all the pointers except outputs**
+    // So now there is a flag that checks if releaseResources has been called already. 
+
+    if (releaseResourcesFlag == false) {
+        if (fDSP != nullptr) {
+            delete fDSP;
+            fDSP = nullptr;
+        }
+
+        if (fUI != nullptr) {
+            delete fUI;
+            fUI = nullptr;
+        }
+
+        for (int channel = 0; channel < 2; ++channel) {
+            if (outputs[channel] != nullptr) {
+                delete[] outputs[channel];
+                outputs[channel] = nullptr;
+            }
+        }
+
+        delete[] outputs;
     }
-    delete[] outputs;
-    */
+
+    releaseResourcesFlag = true;
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -193,16 +211,12 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             if (message.getPitchWheelValue() > 8192) {
                 double x = message.getPitchWheelValue();
                 currentNoteInHertz = noteNumberInHertz * ( (1.0 / 8191) * (x - 8192) + 1);
-                //DBG(currentNoteInHertz);
             }
             if (message.getPitchWheelValue() <= 8192) {
                 currentNoteInHertz = noteNumberInHertz * ((0.5 / 8192) * message.getPitchWheelValue() + 0.5);
             }
        }
 
-       if (message.isSustainPedalOn()) {
-           DBG("back");
-       }
        if (message.isSustainPedalOff()) {
            currentNoteInHertz *= 4;
        }

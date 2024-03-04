@@ -22,7 +22,6 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
 
     int controlTextBoxWidth = 80;
 
-    
     // Freqency 
     addAndMakeVisible(frequencySlider);
     frequencySlider.setRange(50.0, 5000.0, 0.01);
@@ -47,8 +46,6 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     gainLabel.setText("Gain", juce::NotificationType::dontSendNotification);
     gainLabel.attachToComponent(&gainSlider, true);
 
-    
-    
     // Moog Filter 1
     addAndMakeVisible(moogfrSlider);
     moogfrSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -124,13 +121,13 @@ MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
 }
 
 //==============================================================================
-void MonoSynthAudioProcessorEditor::paint (juce::Graphics& g)
+void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-   
+
     // King Giles  
     g.drawImageAt(backgroundImage, 0, -30);
-    
+
     juce::Rectangle<int> bounds = getLocalBounds();
 
     // Define the colors for the sunset gradient
@@ -143,8 +140,6 @@ void MonoSynthAudioProcessorEditor::paint (juce::Graphics& g)
     // Fill the background with the gradient
     g.setGradientFill(gradient);
     g.fillRect(bounds);
-    // King Giles  
-    //g.drawImageAt(backgroundImage, 0, -30);
 }
 
 void MonoSynthAudioProcessorEditor::resized()

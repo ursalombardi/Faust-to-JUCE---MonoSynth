@@ -70,11 +70,12 @@ public:
     double noteNumberInHertz;
     bool apNoteOn = false;
     int noteOnMessages = 0;
+    bool releaseResourcesFlag = false;
 
 private:
     MapUI* fUI;
     dsp* fDSP;
-    float** outputs; // double array (one dimension for audio channels and one for audio samples/buffers
+    float** outputs; // double array (one dimension for audio channels and one for audio samples/buffers)
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoSynthAudioProcessor)
