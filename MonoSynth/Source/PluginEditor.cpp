@@ -17,6 +17,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize(500, 500);
+    startTimer(100);
 
     backgroundImage = juce::ImageCache::getFromMemory(BinaryData::gile_JPG, BinaryData::gile_JPGSize);
 
@@ -55,6 +56,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     moogfrSlider.setNumDecimalPlacesToDisplay(2);
     moogfrSlider.onValueChange = [this] {
         audioProcessor.setMoogfr(moogfrSlider.getValue());
+        setControllerFlagsFalse();
     };
     addAndMakeVisible(moogfrLabel);
     moogfrLabel.setText("Frequency 1", juce::NotificationType::dontSendNotification);
@@ -69,6 +71,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     moogfrSlider2.setNumDecimalPlacesToDisplay(2);
     moogfrSlider2.onValueChange = [this] {
         audioProcessor.setMoogfr2(moogfrSlider2.getValue());
+        setControllerFlagsFalse();
         };
     addAndMakeVisible(moogfrLabel2);
     moogfrLabel2.setText("Frequency 2", juce::NotificationType::dontSendNotification);
@@ -83,7 +86,10 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     moogResSlider.setNumDecimalPlacesToDisplay(2);
     moogResSlider.onValueChange = [this] {
         audioProcessor.setMoogRes(moogResSlider.getValue());
+        setControllerFlagsFalse();
         };
+
+
     addAndMakeVisible(moogResLabel);
     moogResLabel.setText("Resonance 1", juce::NotificationType::dontSendNotification);
     moogResLabel.attachToComponent(&moogResSlider, false);
@@ -97,6 +103,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     moogResSlider2.setNumDecimalPlacesToDisplay(2);
     moogResSlider2.onValueChange = [this] {
         audioProcessor.setMoogRes(moogResSlider2.getValue());
+        setControllerFlagsFalse();
         };
     addAndMakeVisible(moogResLabel2);
     moogResLabel2.setText("Resonance 2", juce::NotificationType::dontSendNotification);
@@ -153,4 +160,28 @@ void MonoSynthAudioProcessorEditor::resized()
     moogfrSlider2.setBounds(leftOffset + getWidth() / 2, topOffset, 200, 200);
     moogResSlider.setBounds(leftOffset, topOffset + getHeight() / 2, 200, 200);
     moogResSlider2.setBounds(leftOffset + getWidth() / 2, topOffset + getHeight() / 2, 200, 200);
+}
+
+void MonoSynthAudioProcessorEditor::timerCallback()
+{
+    if (audioProcessor.controllerFlagFreq1)
+        moogfrSlider.setValue(audioProcessor.controllerValueFreq1 * (3800.0/127.0) + 200);
+    
+    if (audioProcessor.controllerFlagFreq2)
+        moogfrSlider2.setValue(audioProcessor.controllerValueFreq2 * (3800.0 / 127.0) + 200);
+    
+    if (audioProcessor.controllerFlagRes1)
+        moogResSlider.setValue(audioProcessor.controllerValueRes1 / 127.0);
+    
+    if (audioProcessor.controllerFlagRes2)
+        moogResSlider2.setValue(audioProcessor.controllerValueRes2 / 127.0);
+}
+
+
+void MonoSynthAudioProcessorEditor::setControllerFlagsFalse()
+{
+    audioProcessor.controllerFlagFreq1 = false;
+    audioProcessor.controllerFlagFreq2 = false;
+    audioProcessor.controllerFlagRes1 = false;
+    audioProcessor.controllerFlagRes2 = false;
 }

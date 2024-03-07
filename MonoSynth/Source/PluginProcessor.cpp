@@ -192,6 +192,31 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
     {
         const auto message = metadata.getMessage();
         const auto timestamp = metadata.samplePosition;
+       
+        if (message.isController()) {
+            DBG(message.getControllerNumber() << " " << message.getControllerValue());
+            
+            if (message.getControllerNumber() == 74)
+            {
+                controllerValueFreq1 = message.getControllerValue();
+                controllerFlagFreq1 = true;
+            }
+            if (message.getControllerNumber() == 71)
+            {
+                controllerValueFreq2 = message.getControllerValue();
+                controllerFlagFreq2 = true;
+            }
+            if (message.getControllerNumber() == 20)
+            {
+                controllerValueRes1 = message.getControllerValue();
+                controllerFlagRes1 = true;
+            }
+            if (message.getControllerNumber() == 21)
+            {
+                controllerValueRes2 = message.getControllerValue();
+                controllerFlagRes2 = true;
+            }
+        }
 
         if (message.isNoteOff())
         {
@@ -206,7 +231,6 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             int velocity = message.getVelocity();
             DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);
             setGate(true);
-            noteOnMessages++;
             currentNoteNumber = noteNumber;
             currentNoteInHertz = noteNumberInHertz;
         }
@@ -223,21 +247,13 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
        }
 
        if (message.isSustainPedalOff()) {
-           sustainPedalMulitplier = 1;
-       }
-
-       if (message.isSustainPedalOn()) {
            sustainPedalMulitplier = 4;
        }
 
-        if (message.isNoteOff())
-        {
-            noteOnMessages--;
-        }
+       if (message.isSustainPedalOn()) {
+           sustainPedalMulitplier = 1;
+       }
 
-        if (noteOnMessages == 0) {
-            setGate(false);
-        }
     }
 
     setFreq(currentNoteInHertz * pitchWheelMultiplier * sustainPedalMulitplier);
@@ -247,7 +263,6 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             *buffer.getWritePointer(channel, i) = outputs[channel][i];
         }
     }
-
 }
 
 //==============================================================================

@@ -76,15 +76,21 @@ public:
     double pitchWheelMultiplier = 1;
     double sustainPedalMulitplier = 1;
     
+    double controllerValueFreq1 = 200;
+    double controllerValueFreq2= 2000;
+    double controllerValueRes1 = 0.5;
+    double controllerValueRes2 = 0.7;
+    bool controllerFlagFreq1 = false;
+    bool controllerFlagFreq2 = false;
+    bool controllerFlagRes1 = false;
+    bool controllerFlagRes2 = false;
     
-    bool apNoteOn = false;
     int noteOnMessages = 0;
     bool releaseResourcesFlag = false;
 
 private:
     MapUI* fUI;
     dsp* fDSP;
-    
     float** outputs; // double array (one dimension for audio channels and one for audio samples/buffers)
 
     //==============================================================================

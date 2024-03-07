@@ -14,7 +14,7 @@
 //==============================================================================
 /**
 */
-class MonoSynthAudioProcessorEditor  : public juce::AudioProcessorEditor
+class MonoSynthAudioProcessorEditor  : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
     MonoSynthAudioProcessorEditor (MonoSynthAudioProcessor&);
@@ -43,9 +43,11 @@ private:
     juce::Label moogResLabel;
     juce::Label moogResLabel2;
 
-    juce::Label testLabel;
-
     juce::Image backgroundImage;
+
+    void timerCallback() final;
+
+    void setControllerFlagsFalse();
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
