@@ -12,6 +12,7 @@
 #include "PluginEditor.h"
 #include "FaustSynth.h"
 #include <iostream>
+#include <random>
 
 //==============================================================================
 MonoSynthAudioProcessor::MonoSynthAudioProcessor()
@@ -263,6 +264,22 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
             *buffer.getWritePointer(channel, i) = outputs[channel][i];
         }
     }
+}
+
+void MonoSynthAudioProcessor::randomizeControllerValues()
+{
+    moogFreq1 = getRandomDoubleInRange(200.0, 4000.0);
+    moogFreq2 = getRandomDoubleInRange(200.0, 4000.0);
+    moogRes1 = getRandomDoubleInRange(0.0, 1.0);
+    moogRes2 = getRandomDoubleInRange(0.0, 1.0);
+}
+
+double MonoSynthAudioProcessor::getRandomDoubleInRange(double min, double max)
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(min, max);
+    return dis(gen);
 }
 
 //==============================================================================

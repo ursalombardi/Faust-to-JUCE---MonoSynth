@@ -33,6 +33,7 @@ private:
     juce::Slider moogfrSlider2;
     juce::Slider moogResSlider;
     juce::Slider moogResSlider2;
+    juce::TextButton knobRandomizer;
 
     // Labels
     juce::Label frequencyLabel;

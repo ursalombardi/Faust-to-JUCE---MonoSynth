@@ -23,6 +23,25 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
 
     int controlTextBoxWidth = 80;
 
+    addAndMakeVisible(knobRandomizer);
+    knobRandomizer.setButtonText("Random");
+    knobRandomizer.onClick = [this] {
+        setControllerFlagsFalse();
+        audioProcessor.randomizeControllerValues();
+       
+        audioProcessor.setMoogfr(audioProcessor.moogFreq1);
+        moogfrSlider.setValue(audioProcessor.moogFreq1);
+       
+        audioProcessor.setMoogfr2(audioProcessor.moogFreq2);
+        moogfrSlider2.setValue(audioProcessor.moogFreq2);
+       
+        audioProcessor.setMoogRes(audioProcessor.moogRes1);
+        moogResSlider.setValue(audioProcessor.moogRes1);
+       
+        audioProcessor.setMoogRes2(audioProcessor.moogRes2);
+        moogResSlider2.setValue(audioProcessor.moogRes2);
+    };
+
     // Freqency 
     addAndMakeVisible(frequencySlider);
     frequencySlider.setRange(50.0, 5000.0, 0.01);
@@ -160,21 +179,33 @@ void MonoSynthAudioProcessorEditor::resized()
     moogfrSlider2.setBounds(leftOffset + getWidth() / 2, topOffset, 200, 200);
     moogResSlider.setBounds(leftOffset, topOffset + getHeight() / 2, 200, 200);
     moogResSlider2.setBounds(leftOffset + getWidth() / 2, topOffset + getHeight() / 2, 200, 200);
+    knobRandomizer.setBounds(200, 450, 100, 30);
 }
 
 void MonoSynthAudioProcessorEditor::timerCallback()
 {
-    if (audioProcessor.controllerFlagFreq1)
-        moogfrSlider.setValue(audioProcessor.controllerValueFreq1 * (3800.0/127.0) + 200);
+    if (audioProcessor.controllerFlagFreq1) {
+        audioProcessor.moogFreq1 = audioProcessor.controllerValueFreq1 * (3800.0 / 127.0) + 200;
+        moogfrSlider.setValue(audioProcessor.moogFreq1);
+    }
     
     if (audioProcessor.controllerFlagFreq2)
-        moogfrSlider2.setValue(audioProcessor.controllerValueFreq2 * (3800.0 / 127.0) + 200);
+    {
+        audioProcessor.moogFreq2 = audioProcessor.controllerValueFreq2 * (3800.0 / 127.0) + 200;
+        moogfrSlider2.setValue(audioProcessor.moogFreq2);
+    }
     
     if (audioProcessor.controllerFlagRes1)
-        moogResSlider.setValue(audioProcessor.controllerValueRes1 / 127.0);
+    {
+        audioProcessor.moogRes1 = audioProcessor.controllerValueRes1 / 127.0;
+        moogResSlider.setValue(audioProcessor.moogRes1);
+    }
     
     if (audioProcessor.controllerFlagRes2)
-        moogResSlider2.setValue(audioProcessor.controllerValueRes2 / 127.0);
+    {
+        audioProcessor.moogRes2 = audioProcessor.controllerValueRes2 / 127.0;
+        moogResSlider2.setValue(audioProcessor.moogRes2);
+    }
 }
 
 

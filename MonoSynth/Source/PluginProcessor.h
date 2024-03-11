@@ -76,14 +76,20 @@ public:
     double pitchWheelMultiplier = 1;
     double sustainPedalMulitplier = 1;
     
-    double controllerValueFreq1 = 200;
-    double controllerValueFreq2= 2000;
+    double moogFreq1 = 200.0;
+    double moogFreq2 = 2000.0;
+    double moogRes1 = 0.5;
+    double moogRes2 = 0.7;
+    double controllerValueFreq1 = 200.0;
+    double controllerValueFreq2= 2000.0;
     double controllerValueRes1 = 0.5;
     double controllerValueRes2 = 0.7;
     bool controllerFlagFreq1 = false;
     bool controllerFlagFreq2 = false;
     bool controllerFlagRes1 = false;
     bool controllerFlagRes2 = false;
+    void randomizeControllerValues();
+    double getRandomDoubleInRange(double min, double max);
     
     int noteOnMessages = 0;
     bool releaseResourcesFlag = false;
