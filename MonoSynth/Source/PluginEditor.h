@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "MyLookAndFeel.h"
 
 //==============================================================================
 /**
@@ -44,11 +45,14 @@ private:
     juce::Label moogResLabel;
     juce::Label moogResLabel2;
 
+    // Images
     juce::Image backgroundImage;
 
     void timerCallback() final;
 
     void setControllerFlagsFalse();
+
+    MyLookAndFeel myLookAndFeel;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

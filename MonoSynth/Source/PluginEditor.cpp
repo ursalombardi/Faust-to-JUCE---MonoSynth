@@ -19,7 +19,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
     setSize(500, 500);
     startTimer(100);
 
-    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::gile_JPG, BinaryData::gile_JPGSize);
+    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::lamp_png, BinaryData::lamp_pngSize);
 
     int controlTextBoxWidth = 80;
 
@@ -44,7 +44,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
 
     // Freqency 
     addAndMakeVisible(frequencySlider);
-    frequencySlider.setRange(50.0, 5000.0, 0.01);
+    frequencySlider.setRange(50.0, 5000.0, 29.92);
     frequencySlider.setNumDecimalPlacesToDisplay(2);
     frequencySlider.setSkewFactorFromMidPoint(500.0);
     frequencySlider.setValue(200);
@@ -68,8 +68,11 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
 
     // Moog Filter 1
     addAndMakeVisible(moogfrSlider);
+
+    //moogfrSlider.setLookAndFeel(&myLookAndFeel);
+
     moogfrSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    moogfrSlider.setRange(200.0, 4000.0);
+    moogfrSlider.setRange(200.0, 4000.0, (4000.0-200.0)/127.0);
     moogfrSlider.setValue(200.0);
     moogfrSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
     moogfrSlider.setNumDecimalPlacesToDisplay(2);
@@ -144,6 +147,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor (MonoSynthAudioProc
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
 }
 
 //==============================================================================
@@ -152,7 +156,7 @@ void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
 
     // King Giles  
-    g.drawImageAt(backgroundImage, 0, -30);
+    g.drawImageAt(backgroundImage, 0, 0);
 
     juce::Rectangle<int> bounds = getLocalBounds();
 
@@ -165,7 +169,8 @@ void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
 
     // Fill the background with the gradient
     g.setGradientFill(gradient);
-    g.fillRect(bounds);
+    //g.fillRect(bounds);
+
 }
 
 void MonoSynthAudioProcessorEditor::resized()
