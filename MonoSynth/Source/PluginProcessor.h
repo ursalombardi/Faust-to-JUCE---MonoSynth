@@ -57,14 +57,25 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
+    // Basic Controls
     void setFreq(float freq);
     void setGain(float gain);
     void setCutoff(float cutoff);
     void setGate(bool gate);
+    // Moog Filter Controls
     void setMoogfr(float fr);
     void setMoogfr2(float fr2);
     void setMoogRes(float res);
     void setMoogRes2(float res2);
+    // Reverb controls
+    void setReverberationTime(float dt);
+    void setDamp(float damp);
+    void setRoomSize(float size);
+    void setEarlyDiff(float earlydiff);
+    void setFeedback(float feedback);
+    void setReverbModDepth(float moddepth);
+    void setReverbModFreq(float modfreq);
+    void setReverbWetDry(float wetdrymix);
 
     int noteNumber;
     double pitchWheelValue = 8192.0;

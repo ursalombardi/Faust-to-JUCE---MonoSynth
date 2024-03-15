@@ -11,6 +11,9 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "MyLookAndFeel.h"
+#include "UI/MoogFilterComponent.h"
+#include "UI/ReverbComponent.h"
+
 
 //==============================================================================
 /**
@@ -24,8 +27,11 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+
    
 private:
+    ReverbComponent reverbComponent;
+
     // Sliders and Buttons
     juce::Slider frequencySlider; 
     juce::Slider gainSlider;

@@ -49,6 +49,22 @@ void MonoSynthAudioProcessor::setMoogRes(float res) { fUI->setParamValue("res", 
 
 void MonoSynthAudioProcessor::setMoogRes2(float res2) { fUI->setParamValue("res2", res2); }
 
+void MonoSynthAudioProcessor::setReverberationTime(float dt) { fUI->setParamValue("dt", dt); }
+
+void MonoSynthAudioProcessor::setDamp(float damp) { fUI->setParamValue("damp", damp); }
+
+void MonoSynthAudioProcessor::setRoomSize(float size) { fUI->setParamValue("size", size); }
+
+void MonoSynthAudioProcessor::setEarlyDiff(float earlydiff){ fUI->setParamValue("earlydiff", earlydiff); }
+
+void MonoSynthAudioProcessor::setFeedback(float feedback) { fUI->setParamValue("feedback", feedback); }
+
+void MonoSynthAudioProcessor::setReverbModDepth(float moddepth){ fUI->setParamValue("moddepth", moddepth); }
+
+void MonoSynthAudioProcessor::setReverbModFreq(float modfreq){ fUI->setParamValue("modfreq", modfreq); }
+
+void MonoSynthAudioProcessor::setReverbWetDry(float wetdrymix){ fUI->setParamValue("wetdrymix", wetdrymix); }
+
 //==============================================================================
 const juce::String MonoSynthAudioProcessor::getName() const
 {
