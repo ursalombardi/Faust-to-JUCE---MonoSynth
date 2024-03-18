@@ -16,13 +16,17 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(500, 500);
+    setSize(800, 500);
     startTimer(100);
 
-    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::lamp2_png, BinaryData::lamp2_pngSize);
-    juce::Font myFont("Algerian", 20.f, 0);
+    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::fogwall_png, BinaryData::fogwall_pngSize);
+    juce::Font Algerian("Algerian", 20.f, 0);
+    juce::Font AgencyFB("Agency FB", 20.f, 0);
   
     int controlTextBoxWidth = 80;
+
+    addAndMakeVisible(ursynth);
+    ursynth.setText("Ursyth", juce::NotificationType::dontSendNotification);
 
     addAndMakeVisible(knobRandomizer);
     knobRandomizer.setButtonText("Random");
@@ -69,7 +73,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
 
     // Moog Filter 1
     addAndMakeVisible(moogfrSlider);
-    moogfrSlider.setLookAndFeel(&myLookAndFeel);
+    moogfrSlider.setLookAndFeel(&reverbLookAndFeel);
     moogfrSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     //moogfrSlider.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
     moogfrSlider.setRange(200.0, 4000.0, (4000.0 - 200.0) / 127.0);
@@ -80,14 +84,14 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
         audioProcessor.setMoogfr(moogfrSlider.getValue());
         setControllerFlagsFalse();
         };
-    addAndMakeVisible(moogfrLabel);
+    //addAndMakeVisible(moogfrLabel);
     moogfrLabel.toFront(true);
     moogfrLabel.setText("Frequency 1", juce::NotificationType::dontSendNotification);
-    moogfrLabel.setFont(myFont);
+    moogfrLabel.setFont(Algerian);
 
     // Moog Filter 2
     addAndMakeVisible(moogfrSlider2);
-    moogfrSlider2.setLookAndFeel(&myLookAndFeel);
+    moogfrSlider2.setLookAndFeel(&reverbLookAndFeel);
     moogfrSlider2.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     //moogfrSlider2.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
     moogfrSlider2.setRange(200.0, 4000.0);
@@ -98,13 +102,13 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
         audioProcessor.setMoogfr2(moogfrSlider2.getValue());
         setControllerFlagsFalse();
         };
-    addAndMakeVisible(moogfrLabel2);
+    //addAndMakeVisible(moogfrLabel2);
     moogfrLabel2.setText("Frequency 2", juce::NotificationType::dontSendNotification);
-    moogfrLabel2.setFont(myFont);
+    moogfrLabel2.setFont(Algerian);
 
     // Moog Res 1
     addAndMakeVisible(moogResSlider);
-    moogResSlider.setLookAndFeel(&myLookAndFeel);
+    moogResSlider.setLookAndFeel(&reverbLookAndFeel);
     moogResSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     //moogResSlider.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
     moogResSlider.setRange(0.0, 1.0);
@@ -115,13 +119,13 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
         audioProcessor.setMoogRes(moogResSlider.getValue());
         setControllerFlagsFalse();
         };
-    addAndMakeVisible(moogResLabel);
+    //addAndMakeVisible(moogResLabel);
     moogResLabel.setText("Resonance 1", juce::NotificationType::dontSendNotification);
-    moogResLabel.setFont(myFont);
+    moogResLabel.setFont(Algerian);
 
     // Moog Res 2
     addAndMakeVisible(moogResSlider2);
-    moogResSlider2.setLookAndFeel(&myLookAndFeel);
+    moogResSlider2.setLookAndFeel(&reverbLookAndFeel);
     moogResSlider2.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     //moogResSlider2.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
     moogResSlider2.setRange(0.0, 1.0);
@@ -132,18 +136,13 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
         audioProcessor.setMoogRes(moogResSlider2.getValue());
         setControllerFlagsFalse();
         };
-    addAndMakeVisible(moogResLabel2);
+    //addAndMakeVisible(moogResLabel2);
     moogResLabel2.setText("Resonance 2", juce::NotificationType::dontSendNotification);
-    moogResLabel2.setFont(myFont);
+    moogResLabel2.setFont(Algerian);
 
     // Reverb Component
     addAndMakeVisible(reverbComponent);
-    reverbComponent.dtSlider.onValueChange = [this] {
-        audioProcessor.setReverberationTime(reverbComponent.dtSlider.getValue());
-        };
-    reverbComponent.dryWetMixSlider.onValueChange = [this] {
-        audioProcessor.setReverbWetDry(reverbComponent.dryWetMixSlider.getValue());
-        };
+    reverbValueChange();
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
@@ -161,6 +160,7 @@ void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
 
     // King Giles  
+
     g.drawImageAt(backgroundImage, 0, 0);
 
     juce::Rectangle<int> bounds = getLocalBounds();
@@ -183,6 +183,8 @@ void MonoSynthAudioProcessorEditor::resized()
     int leftOffset = 20; 
     int topOffset = 45;
     int mainControlSize = 100;
+
+    ursynth.setBounds(0, 0, 30, 30);
   
     moogfrSlider.setBounds(leftOffset, topOffset, mainControlSize, mainControlSize);
     moogfrLabel.setBounds(moogfrSlider.getBounds().getX(), moogfrSlider.getBounds().getY() - 30, 100, 25);
@@ -199,6 +201,9 @@ void MonoSynthAudioProcessorEditor::resized()
     reverbComponent.setBounds(0, 200, 500, 250);
 
     knobRandomizer.setBounds(200, 470, 100, 30);
+
+    ursynth.setBounds(0, 0, 200, 200);
+
 }
 
 void MonoSynthAudioProcessorEditor::timerCallback()
@@ -234,4 +239,40 @@ void MonoSynthAudioProcessorEditor::setControllerFlagsFalse()
     audioProcessor.controllerFlagFreq2 = false;
     audioProcessor.controllerFlagRes1 = false;
     audioProcessor.controllerFlagRes2 = false;
+}
+
+void MonoSynthAudioProcessorEditor::reverbValueChange()
+{
+    reverbComponent.dtSlider.onValueChange = [this] {
+        audioProcessor.setReverberationTime(reverbComponent.dtSlider.getValue());
+        };
+
+    reverbComponent.dampSlider.onValueChange = [this] {
+        audioProcessor.setDamp(reverbComponent.dampSlider.getValue());
+        };
+
+    reverbComponent.sizeSlider.onValueChange = [this] {
+        audioProcessor.setRoomSize(reverbComponent.sizeSlider.getValue());
+        };
+
+    reverbComponent.earlyDiffSlider.onValueChange = [this] {
+        audioProcessor.setEarlyDiff(reverbComponent.earlyDiffSlider.getValue());
+        };
+
+    reverbComponent.feedbackSlider.onValueChange = [this] {
+        audioProcessor.setFeedback(reverbComponent.feedbackSlider.getValue());
+        };
+
+    reverbComponent.modDepthSlider.onValueChange = [this] {
+        audioProcessor.setReverbModDepth(reverbComponent.modDepthSlider.getValue());
+        };
+
+    reverbComponent.modFreqSlider.onValueChange = [this] {
+        audioProcessor.setReverbModFreq(reverbComponent.modFreqSlider.getValue());
+        };
+
+    reverbComponent.dryWetMixSlider.onValueChange = [this] {
+        audioProcessor.setReverbWetDry(reverbComponent.dryWetMixSlider.getValue());
+        };
+
 }

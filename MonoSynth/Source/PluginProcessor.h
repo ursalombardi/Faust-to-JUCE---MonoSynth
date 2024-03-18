@@ -1,11 +1,3 @@
-/*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #pragma once
 
 #include <JuceHeader.h>
@@ -13,17 +5,12 @@
 class dsp;
 class MapUI;
 
-//==============================================================================
-/**
-*/
 class MonoSynthAudioProcessor  : public juce::AudioProcessor
 {
 public:
-    //==============================================================================
     MonoSynthAudioProcessor();
     ~MonoSynthAudioProcessor() override;
 
-    //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
@@ -33,30 +20,21 @@ public:
 
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
-    //==============================================================================
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
-
-    //==============================================================================
     const juce::String getName() const override;
-
     bool acceptsMidi() const override;
     bool producesMidi() const override;
     bool isMidiEffect() const override;
     double getTailLengthSeconds() const override;
-
-    //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
     void setCurrentProgram (int index) override;
     const juce::String getProgramName (int index) override;
     void changeProgramName (int index, const juce::String& newName) override;
-
-    //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    //==============================================================================
     // Basic Controls
     void setFreq(float freq);
     void setGain(float gain);
@@ -76,17 +54,15 @@ public:
     void setReverbModDepth(float moddepth);
     void setReverbModFreq(float modfreq);
     void setReverbWetDry(float wetdrymix);
-
+    // Midi
     int noteNumber;
     double pitchWheelValue = 8192.0;
     double noteNumberInHertz;
-   
     int currentNoteNumber;
     double currentNoteInHertz = 300.0;
-
     double pitchWheelMultiplier = 1;
     double sustainPedalMulitplier = 1;
-    
+    // Midi Controls for main knobs
     double moogFreq1 = 200.0;
     double moogFreq2 = 2000.0;
     double moogRes1 = 0.5;
@@ -101,8 +77,7 @@ public:
     bool controllerFlagRes2 = false;
     void randomizeControllerValues();
     double getRandomDoubleInRange(double min, double max);
-    
-    int noteOnMessages = 0;
+    // Prevents crashes
     bool releaseResourcesFlag = false;
 
 private:

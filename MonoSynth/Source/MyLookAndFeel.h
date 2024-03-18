@@ -11,10 +11,10 @@
 #pragma once
 #include<JuceHeader.h>
 
-class MyLookAndFeel : public juce::LookAndFeel_V4
+class ReverbLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
-    MyLookAndFeel()
+    ReverbLookAndFeel()
     {
         setColour(juce::Slider::thumbColourId, juce::Colours::red);
     }

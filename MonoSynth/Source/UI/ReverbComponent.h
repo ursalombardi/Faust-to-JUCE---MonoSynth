@@ -21,14 +21,22 @@ class ReverbComponent  : public juce::Component
 public:
     ReverbComponent()
     {
-        createKnob(dtSlider, 0.1, 0.1, 60, 0.01);
-        createKnob(dampSlider, 0, 0, 1, 0.01);
-        createKnob(sizeSlider, 1, 0.5, 3, 0.01);
-        createKnob(earlyDiffSlider, 0.5, 0, 1, 0.01);
-        createKnob(feedbackSlider, 0.5, 0, 1, 0.01);
-        createKnob(modDepthSlider, 0.0, 0.0, 1, 0.01);
-        createKnob(modFreqSlider, 1, 0, 10, 0.01);
-        createKnob(dryWetMixSlider, 0.5, 0, 1, 0.01);
+        createKnob(dtSlider, dtLabel, 0.1, 0.1, 60, 0.01);
+        createKnob(dampSlider, dampLabel, 0, 0, 1, 0.01);
+        createKnob(sizeSlider, sizeLabel, 1, 0.5, 3, 0.01);
+        createKnob(earlyDiffSlider, earlyDiffLabel, 0.5, 0, 1, 0.01);
+        createKnob(feedbackSlider, feedbackLabel, 0.5, 0, 1, 0.01);
+        createKnob(modDepthSlider, modDepthLabel, 0.0, 0.0, 1, 0.01);
+        createKnob(modFreqSlider, modFreqLabel, 1, 0, 10, 0.01);
+        createKnob(dryWetMixSlider, dryWetMixLabel, 0.5, 0, 1, 0.01);
+        createLabel(dtLabel, "DT:");
+        createLabel(dampLabel, "Damp:");
+        createLabel(sizeLabel, "Size:");
+        createLabel(earlyDiffLabel, "Early Diff:");
+        createLabel(feedbackLabel, "Feedback:");
+        createLabel(modDepthLabel, "Mod Depth:");
+        createLabel(modFreqLabel, "Mod Freq:");
+        createLabel(dryWetMixLabel, "Dry/Wet Mix:");
     }
 
     ~ReverbComponent() override
@@ -61,6 +69,7 @@ public:
     void resized() override
     {
         dtSlider.setBounds(0, 0, 100, 100);
+        dtLabel.setBounds(dtSlider.getX(), dtSlider.getY() + 20, 30, 30);
         dampSlider.setBounds(125, 0, 100, 100);
         sizeSlider.setBounds(250, 0, 100, 100);
         earlyDiffSlider.setBounds(375, 0, 100, 100);
@@ -70,7 +79,7 @@ public:
         dryWetMixSlider.setBounds(375, 125, 100, 100);
     }
 
-    void createKnob(juce::Slider& slider, double initialValue, double minRange, double maxRange, double increment) {
+    void createKnob(juce::Slider& slider, juce::Label& label, double initialValue, double minRange, double maxRange, double increment) {
         addAndMakeVisible(slider);
         slider.setLookAndFeel(&myLookAndFeel);
         slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
@@ -78,6 +87,12 @@ public:
         slider.setValue(initialValue);
         slider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, 80, 20);
         slider.setNumDecimalPlacesToDisplay(2);
+    }
+
+    void createLabel(juce::Label& label, juce::String text)
+    {
+        addAndMakeVisible(label);
+        label.setText(text, juce::NotificationType::dontSendNotification);
     }
 
     juce::Slider dtSlider;
@@ -89,7 +104,16 @@ public:
     juce::Slider modFreqSlider;
     juce::Slider dryWetMixSlider;
 
+    juce::Label dtLabel;
+    juce::Label dampLabel;
+    juce::Label sizeLabel;
+    juce::Label earlyDiffLabel;
+    juce::Label feedbackLabel;
+    juce::Label modDepthLabel;
+    juce::Label modFreqLabel;
+    juce::Label dryWetMixLabel;
+
 private:
-    MyLookAndFeel myLookAndFeel;
+    ReverbLookAndFeel myLookAndFeel;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReverbComponent)
 };

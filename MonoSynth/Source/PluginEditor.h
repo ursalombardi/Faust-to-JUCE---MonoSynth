@@ -27,7 +27,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-
+    void reverbValueChange();
    
 private:
     ReverbComponent reverbComponent;
@@ -53,12 +53,13 @@ private:
 
     // Images
     juce::Image backgroundImage;
+    juce::Label ursynth;
 
     void timerCallback() final;
 
     void setControllerFlagsFalse();
 
-    MyLookAndFeel myLookAndFeel;
+    ReverbLookAndFeel reverbLookAndFeel;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
