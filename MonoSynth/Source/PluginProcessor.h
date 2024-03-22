@@ -1,6 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <vector>
+#include <algorithm>
 
 class dsp;
 class MapUI;
@@ -79,6 +81,7 @@ public:
     double currentNoteInHertz = 300.0;
     double pitchWheelMultiplier = 1;
     double sustainPedalMulitplier = 1;
+    std::vector<int> activeNoteNumbers;
     
     // Midi Controls for main knobs
     double moogFreq1 = 800.0;

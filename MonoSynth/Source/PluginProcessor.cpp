@@ -241,14 +241,25 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
         if (message.isNoteOff())
         {
-            if (message.getNoteNumber() == currentNoteNumber)
+            auto it = std::find(activeNoteNumbers.begin(), activeNoteNumbers.end(), message.getNoteNumber());
+            if (it != activeNoteNumbers.end())
+                activeNoteNumbers.erase(it);
+            
+            if (activeNoteNumbers.empty())
                 setGate(false);
+            else
+            {
+                noteNumber = activeNoteNumbers.back();
+                noteNumberInHertz = message.getMidiNoteInHertz(noteNumber);
+                currentNoteNumber = noteNumber;
+                currentNoteInHertz = noteNumberInHertz;
+            }
         }
 
         if (message.isNoteOn())
         {
-            setGate(false);
             noteNumber = message.getNoteNumber();
+            activeNoteNumbers.push_back(noteNumber);
             noteNumberInHertz = message.getMidiNoteInHertz(noteNumber);
             int velocity = message.getVelocity();
             DBG("Note On: Note Number = " << noteNumber << ", Velocity = " << velocity);

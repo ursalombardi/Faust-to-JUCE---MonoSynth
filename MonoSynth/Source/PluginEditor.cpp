@@ -92,6 +92,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     tremSlider.setRange(0.0, 6.0);
     tremSlider.setValue(0.0);
     tremSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    tremSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
     tremSlider.onValueChange = [this] {
 
         audioProcessor.setTremeloRate(tremSlider.getValue());
@@ -141,44 +142,18 @@ void MonoSynthAudioProcessorEditor::resized()
     reverbComponent.setBounds(300, 0, 500, 350);
     attackSlider.setBounds(300, 380, 200, 20);
     releaseSlider.setBounds(300, 430, 200, 20);
-    tremSlider.setBounds(350, 405, 200, 20);
+    tremSlider.setBounds(550, 375, 30, 100);
 
     knobRandomizer.setBounds(700, 470, 100, 30);
 }
 
 void MonoSynthAudioProcessorEditor::timerCallback()
 {
-    if (audioProcessor.controllerFlagFreq1) {
-        audioProcessor.moogFreq1 = audioProcessor.controllerValueFreq1 * (3800.0 / 127.0) + 200;
-        //moogfrSlider.setValue(audioProcessor.moogFreq1);
-    }
-    
-    if (audioProcessor.controllerFlagFreq2)
-    {
-        audioProcessor.moogFreq2 = audioProcessor.controllerValueFreq2 * (3800.0 / 127.0) + 200;
-        //moogfrSlider2.setValue(audioProcessor.moogFreq2);
-    }
-    
-    if (audioProcessor.controllerFlagRes1)
-    {
-        audioProcessor.moogRes1 = audioProcessor.controllerValueRes1 / 127.0;
-        //moogResSlider.setValue(audioProcessor.moogRes1);
-    }
-    
-    if (audioProcessor.controllerFlagRes2)
-    {
-        audioProcessor.moogRes2 = audioProcessor.controllerValueRes2 / 127.0;
-        //moogResSlider2.setValue(audioProcessor.moogRes2);
-    }
 }
 
 
 void MonoSynthAudioProcessorEditor::setControllerFlagsFalse()
 {
-    audioProcessor.controllerFlagFreq1 = false;
-    audioProcessor.controllerFlagFreq2 = false;
-    audioProcessor.controllerFlagRes1 = false;
-    audioProcessor.controllerFlagRes2 = false;
 }
 
 void MonoSynthAudioProcessorEditor::moogFilterValueChange()
