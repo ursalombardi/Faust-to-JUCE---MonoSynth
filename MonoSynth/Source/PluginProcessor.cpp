@@ -17,53 +17,57 @@
 //==============================================================================
 MonoSynthAudioProcessor::MonoSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", juce::AudioChannelSet::stereo(), true)
 #endif
-{
+        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+    )
+#endif
+{   
 }
 
 MonoSynthAudioProcessor::~MonoSynthAudioProcessor()
 {
 }
 
+// Basic
 void MonoSynthAudioProcessor::setFreq(float freq) { fUI->setParamValue("freq", freq); }
-
 void MonoSynthAudioProcessor::setGain(float gain) { fUI->setParamValue("gain", gain); }
-
-void MonoSynthAudioProcessor::setCutoff(float cutoff) { fUI->setParamValue("cutoff", 5000); }
-
 void MonoSynthAudioProcessor::setGate(bool gate) { fUI->setParamValue("gate", gate ? 1: 0); }
 
-void MonoSynthAudioProcessor::setMoogfr(float fr) { fUI->setParamValue("fr", fr); }
+// Moog VCF
+void MonoSynthAudioProcessor::setMainfr(float fr) { fUI->setParamValue("fr", fr); }
+void MonoSynthAudioProcessor::setMainres(float res) { fUI->setParamValue("res", res); }
+void MonoSynthAudioProcessor::setSquarefr(float fr2) { fUI->setParamValue("fr2", fr2); }
+void MonoSynthAudioProcessor::setSquareres(float res2) { fUI->setParamValue("res2", res2); }
+void MonoSynthAudioProcessor::setSawfr(float fr3) { fUI->setParamValue("fr3", fr3); }
+void MonoSynthAudioProcessor::setSawres(float res3) { fUI->setParamValue("res3", res3); }
+void MonoSynthAudioProcessor::setPulsefr(float fr4) { fUI->setParamValue("fr4", fr4); }
+void MonoSynthAudioProcessor::setPulseres(float res4) { fUI->setParamValue("res4", res4); }
+void MonoSynthAudioProcessor::setSquareindex(float index) { fUI->setParamValue("index", index); }
+void MonoSynthAudioProcessor::setSawindex(float index2) { fUI->setParamValue("index2", index2); }
+void MonoSynthAudioProcessor::setPulseindex(float index3) { fUI->setParamValue("index3", index3); }
 
-void MonoSynthAudioProcessor::setMoogfr2(float fr2) { fUI->setParamValue("fr2", fr2); }
-
-void MonoSynthAudioProcessor::setMoogRes(float res) { fUI->setParamValue("res", res); }
-
-void MonoSynthAudioProcessor::setMoogRes2(float res2) { fUI->setParamValue("res2", res2); }
-
+// Reverb 
 void MonoSynthAudioProcessor::setReverberationTime(float dt) { fUI->setParamValue("dt", dt); }
-
 void MonoSynthAudioProcessor::setDamp(float damp) { fUI->setParamValue("damp", damp); }
-
 void MonoSynthAudioProcessor::setRoomSize(float size) { fUI->setParamValue("size", size); }
-
 void MonoSynthAudioProcessor::setEarlyDiff(float earlydiff){ fUI->setParamValue("earlydiff", earlydiff); }
-
 void MonoSynthAudioProcessor::setFeedback(float feedback) { fUI->setParamValue("feedback", feedback); }
-
 void MonoSynthAudioProcessor::setReverbModDepth(float moddepth){ fUI->setParamValue("moddepth", moddepth); }
-
 void MonoSynthAudioProcessor::setReverbModFreq(float modfreq){ fUI->setParamValue("modfreq", modfreq); }
-
 void MonoSynthAudioProcessor::setReverbWetDry(float wetdrymix){ fUI->setParamValue("wetdrymix", wetdrymix); }
+
+// AR 
+void MonoSynthAudioProcessor::setAttack(float attack) { fUI->setParamValue("attack", attack); }
+void MonoSynthAudioProcessor::setRelease(float release) { fUI->setParamValue("release", release); }
+
+// Tremelo
+void MonoSynthAudioProcessor::setTremeloRate(float trem) { fUI->setParamValue("trem", trem); }
+void MonoSynthAudioProcessor::setTremeloGate(bool gate) { fUI->setParamValue("select", gate); }
 
 //==============================================================================
 const juce::String MonoSynthAudioProcessor::getName() const
@@ -243,6 +247,7 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
         if (message.isNoteOn())
         {
+            setGate(false);
             noteNumber = message.getNoteNumber();
             noteNumberInHertz = message.getMidiNoteInHertz(noteNumber);
             int velocity = message.getVelocity();

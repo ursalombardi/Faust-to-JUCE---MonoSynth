@@ -38,13 +38,21 @@ public:
     // Basic Controls
     void setFreq(float freq);
     void setGain(float gain);
-    void setCutoff(float cutoff);
     void setGate(bool gate);
+    
     // Moog Filter Controls
-    void setMoogfr(float fr);
-    void setMoogfr2(float fr2);
-    void setMoogRes(float res);
-    void setMoogRes2(float res2);
+    void setMainfr(float fr);
+    void setMainres(float res);
+    void setSquarefr(float fr2);
+    void setSquareres(float res2);
+    void setSawfr(float fr3);
+    void setSawres(float res3);
+    void setPulsefr(float fr4);
+    void setPulseres(float res4);
+    void setSquareindex(float index);
+    void setSawindex(float index2);
+    void setPulseindex(float index3);
+
     // Reverb controls
     void setReverberationTime(float dt);
     void setDamp(float damp);
@@ -54,6 +62,15 @@ public:
     void setReverbModDepth(float moddepth);
     void setReverbModFreq(float modfreq);
     void setReverbWetDry(float wetdrymix);
+    
+    // AR Controls
+    void setAttack(float attack);
+    void setRelease(float release);
+
+    // Tremelo
+    void setTremeloRate(float trem);
+    void setTremeloGate(bool tremgate);
+
     // Midi
     int noteNumber;
     double pitchWheelValue = 8192.0;
@@ -62,8 +79,9 @@ public:
     double currentNoteInHertz = 300.0;
     double pitchWheelMultiplier = 1;
     double sustainPedalMulitplier = 1;
+    
     // Midi Controls for main knobs
-    double moogFreq1 = 200.0;
+    double moogFreq1 = 800.0;
     double moogFreq2 = 2000.0;
     double moogRes1 = 0.5;
     double moogRes2 = 0.7;
@@ -77,6 +95,7 @@ public:
     bool controllerFlagRes2 = false;
     void randomizeControllerValues();
     double getRandomDoubleInRange(double min, double max);
+    
     // Prevents crashes
     bool releaseResourcesFlag = false;
 

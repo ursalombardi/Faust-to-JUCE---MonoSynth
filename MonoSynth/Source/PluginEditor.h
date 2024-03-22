@@ -28,32 +28,24 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void reverbValueChange();
+    void moogFilterValueChange();
    
 private:
     ReverbComponent reverbComponent;
+    MoogFilterComponent moogFilterComponent;
 
     // Sliders and Buttons
     juce::Slider frequencySlider; 
     juce::Slider gainSlider;
     juce::ToggleButton onOffButton;
-    juce::Slider moogfrSlider;
-    juce::Slider moogfrSlider2;
-    juce::Slider moogResSlider;
-    juce::Slider moogResSlider2;
     juce::TextButton knobRandomizer;
 
-    // Labels
-    juce::Label frequencyLabel;
-    juce::Label gainLabel;
-    juce::Label onOffLabel;
-    juce::Label moogfrLabel;
-    juce::Label moogfrLabel2;
-    juce::Label moogResLabel;
-    juce::Label moogResLabel2;
+    juce::Slider attackSlider;
+    juce::Slider releaseSlider;
+    juce::Slider tremSlider;
 
     // Images
     juce::Image backgroundImage;
-    juce::Label ursynth;
 
     void timerCallback() final;
 

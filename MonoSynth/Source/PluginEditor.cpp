@@ -25,26 +25,23 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
   
     int controlTextBoxWidth = 80;
 
-    addAndMakeVisible(ursynth);
-    ursynth.setText("Ursyth", juce::NotificationType::dontSendNotification);
-
     addAndMakeVisible(knobRandomizer);
     knobRandomizer.setButtonText("Random");
     knobRandomizer.onClick = [this] {
         setControllerFlagsFalse();
         audioProcessor.randomizeControllerValues();
 
-        audioProcessor.setMoogfr(audioProcessor.moogFreq1);
-        moogfrSlider.setValue(audioProcessor.moogFreq1);
+        //audioProcessor.setMainfr(audioProcessor.moogFreq1);
+        //moogfrSlider.setValue(audioProcessor.moogFreq1);
 
-        audioProcessor.setMoogfr2(audioProcessor.moogFreq2);
-        moogfrSlider2.setValue(audioProcessor.moogFreq2);
+        audioProcessor.setSquarefr(audioProcessor.moogFreq2);
+        //moogfrSlider2.setValue(audioProcessor.moogFreq2);
 
-        audioProcessor.setMoogRes(audioProcessor.moogRes1);
-        moogResSlider.setValue(audioProcessor.moogRes1);
+        audioProcessor.setMainres(audioProcessor.moogRes1);
+        //moogResSlider.setValue(audioProcessor.moogRes1);
 
-        audioProcessor.setMoogRes2(audioProcessor.moogRes2);
-        moogResSlider2.setValue(audioProcessor.moogRes2);
+        audioProcessor.setSquareres(audioProcessor.moogRes2);
+        //moogResSlider2.setValue(audioProcessor.moogRes2);
         };
 
     // Freqency 
@@ -56,9 +53,6 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     frequencySlider.onValueChange = [this] {
         audioProcessor.setFreq(frequencySlider.getValue());
         };
-    addAndMakeVisible(frequencyLabel);
-    frequencyLabel.setText("Frequency", juce::NotificationType::dontSendNotification);
-    frequencyLabel.attachToComponent(&frequencySlider, true);
 
     // Gain
     addAndMakeVisible(gainSlider);
@@ -67,90 +61,49 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     gainSlider.onValueChange = [this] {
         audioProcessor.setGain(gainSlider.getValue());
         };
-    addAndMakeVisible(gainLabel);
-    gainLabel.setText("Gain", juce::NotificationType::dontSendNotification);
-    gainLabel.attachToComponent(&gainSlider, true);
 
-    // Moog Filter 1
-    addAndMakeVisible(moogfrSlider);
-    moogfrSlider.setLookAndFeel(&reverbLookAndFeel);
-    moogfrSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    //moogfrSlider.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
-    moogfrSlider.setRange(200.0, 4000.0, (4000.0 - 200.0) / 127.0);
-    moogfrSlider.setValue(200.0);
-    moogfrSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
-    moogfrSlider.setNumDecimalPlacesToDisplay(2);
-    moogfrSlider.onValueChange = [this] {
-        audioProcessor.setMoogfr(moogfrSlider.getValue());
-        setControllerFlagsFalse();
-        };
-    //addAndMakeVisible(moogfrLabel);
-    moogfrLabel.toFront(true);
-    moogfrLabel.setText("Frequency 1", juce::NotificationType::dontSendNotification);
-    moogfrLabel.setFont(Algerian);
-
-    // Moog Filter 2
-    addAndMakeVisible(moogfrSlider2);
-    moogfrSlider2.setLookAndFeel(&reverbLookAndFeel);
-    moogfrSlider2.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    //moogfrSlider2.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
-    moogfrSlider2.setRange(200.0, 4000.0);
-    moogfrSlider2.setValue(2000.0);
-    moogfrSlider2.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
-    moogfrSlider2.setNumDecimalPlacesToDisplay(2);
-    moogfrSlider2.onValueChange = [this] {
-        audioProcessor.setMoogfr2(moogfrSlider2.getValue());
-        setControllerFlagsFalse();
-        };
-    //addAndMakeVisible(moogfrLabel2);
-    moogfrLabel2.setText("Frequency 2", juce::NotificationType::dontSendNotification);
-    moogfrLabel2.setFont(Algerian);
-
-    // Moog Res 1
-    addAndMakeVisible(moogResSlider);
-    moogResSlider.setLookAndFeel(&reverbLookAndFeel);
-    moogResSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    //moogResSlider.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
-    moogResSlider.setRange(0.0, 1.0);
-    moogResSlider.setValue(0.7);
-    moogResSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
-    moogResSlider.setNumDecimalPlacesToDisplay(2);
-    moogResSlider.onValueChange = [this] {
-        audioProcessor.setMoogRes(moogResSlider.getValue());
-        setControllerFlagsFalse();
-        };
-    //addAndMakeVisible(moogResLabel);
-    moogResLabel.setText("Resonance 1", juce::NotificationType::dontSendNotification);
-    moogResLabel.setFont(Algerian);
-
-    // Moog Res 2
-    addAndMakeVisible(moogResSlider2);
-    moogResSlider2.setLookAndFeel(&reverbLookAndFeel);
-    moogResSlider2.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    //moogResSlider2.setRotaryParameters(juce::MathConstants<float>::pi, juce::MathConstants<float>::pi * 2.99, false);
-    moogResSlider2.setRange(0.0, 1.0);
-    moogResSlider2.setValue(0.5);
-    moogResSlider2.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow, false, controlTextBoxWidth, 20);
-    moogResSlider2.setNumDecimalPlacesToDisplay(2);
-    moogResSlider2.onValueChange = [this] {
-        audioProcessor.setMoogRes(moogResSlider2.getValue());
-        setControllerFlagsFalse();
-        };
-    //addAndMakeVisible(moogResLabel2);
-    moogResLabel2.setText("Resonance 2", juce::NotificationType::dontSendNotification);
-    moogResLabel2.setFont(Algerian);
+    // Moog Filter Component
+    addAndMakeVisible(moogFilterComponent);
+    moogFilterValueChange();
 
     // Reverb Component
     addAndMakeVisible(reverbComponent);
     reverbValueChange();
+
+    // AR Sliders
+    addAndMakeVisible(attackSlider);
+    attackSlider.setRange(0.01, 7.0);
+    attackSlider.setValue(0.01);
+    attackSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    attackSlider.onValueChange = [this] {
+        audioProcessor.setAttack(attackSlider.getValue());
+        };
+
+    addAndMakeVisible(releaseSlider);
+    releaseSlider.setRange(0.01, 5.0);
+    releaseSlider.setValue(0.01);
+    releaseSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    releaseSlider.onValueChange = [this] {
+        audioProcessor.setRelease(releaseSlider.getValue());
+        };
+
+    // Tremelo Slider
+    addAndMakeVisible(tremSlider);
+    tremSlider.setRange(0.0, 6.0);
+    tremSlider.setValue(0.0);
+    tremSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    tremSlider.onValueChange = [this] {
+
+        audioProcessor.setTremeloRate(tremSlider.getValue());
+        if (tremSlider.getValue() > 0.0)
+            audioProcessor.setTremeloGate(true);
+        else
+            audioProcessor.setTremeloGate(false);
+        };   
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
 {
-    moogfrSlider.setLookAndFeel(nullptr);
-    moogfrSlider2.setLookAndFeel(nullptr);
-    moogResSlider.setLookAndFeel(nullptr);
-    moogResSlider2.setLookAndFeel(nullptr);
     knobRandomizer.setLookAndFeel(nullptr);
 }
 
@@ -184,51 +137,38 @@ void MonoSynthAudioProcessorEditor::resized()
     int topOffset = 45;
     int mainControlSize = 100;
 
-    ursynth.setBounds(0, 0, 30, 30);
-  
-    moogfrSlider.setBounds(leftOffset, topOffset, mainControlSize, mainControlSize);
-    moogfrLabel.setBounds(moogfrSlider.getBounds().getX(), moogfrSlider.getBounds().getY() - 30, 100, 25);
-    
-    moogfrSlider2.setBounds(leftOffset + 120, topOffset, mainControlSize, mainControlSize);
-    moogfrLabel2.setBounds(moogfrSlider2.getBounds().getX() + 35, moogfrSlider2.getBounds().getY() - 30, 100, 25);
-    
-    moogResSlider.setBounds(leftOffset + 240, topOffset, mainControlSize, mainControlSize);
-    moogResLabel.setBounds(moogResSlider.getBounds().getX(), moogResSlider.getBounds().getY() - 30, 100, 25);
-    
-    moogResSlider2.setBounds(leftOffset + 360, topOffset, mainControlSize, mainControlSize);
-    moogResLabel2.setBounds(moogResSlider2.getBounds().getX() + 35, moogResSlider2.getBounds().getY() - 30, 100, 25);
+    moogFilterComponent.setBounds(0, 100, 400, 400);
+    reverbComponent.setBounds(300, 0, 500, 350);
+    attackSlider.setBounds(300, 380, 200, 20);
+    releaseSlider.setBounds(300, 430, 200, 20);
+    tremSlider.setBounds(350, 405, 200, 20);
 
-    reverbComponent.setBounds(0, 200, 500, 250);
-
-    knobRandomizer.setBounds(200, 470, 100, 30);
-
-    ursynth.setBounds(0, 0, 200, 200);
-
+    knobRandomizer.setBounds(700, 470, 100, 30);
 }
 
 void MonoSynthAudioProcessorEditor::timerCallback()
 {
     if (audioProcessor.controllerFlagFreq1) {
         audioProcessor.moogFreq1 = audioProcessor.controllerValueFreq1 * (3800.0 / 127.0) + 200;
-        moogfrSlider.setValue(audioProcessor.moogFreq1);
+        //moogfrSlider.setValue(audioProcessor.moogFreq1);
     }
     
     if (audioProcessor.controllerFlagFreq2)
     {
         audioProcessor.moogFreq2 = audioProcessor.controllerValueFreq2 * (3800.0 / 127.0) + 200;
-        moogfrSlider2.setValue(audioProcessor.moogFreq2);
+        //moogfrSlider2.setValue(audioProcessor.moogFreq2);
     }
     
     if (audioProcessor.controllerFlagRes1)
     {
         audioProcessor.moogRes1 = audioProcessor.controllerValueRes1 / 127.0;
-        moogResSlider.setValue(audioProcessor.moogRes1);
+        //moogResSlider.setValue(audioProcessor.moogRes1);
     }
     
     if (audioProcessor.controllerFlagRes2)
     {
         audioProcessor.moogRes2 = audioProcessor.controllerValueRes2 / 127.0;
-        moogResSlider2.setValue(audioProcessor.moogRes2);
+        //moogResSlider2.setValue(audioProcessor.moogRes2);
     }
 }
 
@@ -239,6 +179,53 @@ void MonoSynthAudioProcessorEditor::setControllerFlagsFalse()
     audioProcessor.controllerFlagFreq2 = false;
     audioProcessor.controllerFlagRes1 = false;
     audioProcessor.controllerFlagRes2 = false;
+}
+
+void MonoSynthAudioProcessorEditor::moogFilterValueChange()
+{
+    moogFilterComponent.frMainSlider.onValueChange = [this] {
+        audioProcessor.setMainfr(moogFilterComponent.frMainSlider.getValue());
+        };
+
+    moogFilterComponent.resMainSlider.onValueChange = [this] {
+        audioProcessor.setMainres(moogFilterComponent.resMainSlider.getValue());
+        };
+
+    moogFilterComponent.indexSquareSlider.onValueChange = [this] {
+        audioProcessor.setSquareindex(moogFilterComponent.indexSquareSlider.getValue());
+        };
+
+    moogFilterComponent.indexSawSlider.onValueChange = [this] {
+        audioProcessor.setSawindex(moogFilterComponent.indexSawSlider.getValue());
+        };
+
+    moogFilterComponent.indexPulseSlider.onValueChange = [this] {
+        audioProcessor.setPulseindex(moogFilterComponent.indexPulseSlider.getValue());
+        };
+
+    moogFilterComponent.frSquareSlider.onValueChange = [this] {
+        audioProcessor.setSquarefr(moogFilterComponent.frSquareSlider.getValue());
+        };
+
+    moogFilterComponent.frSawSlider.onValueChange = [this] {
+        audioProcessor.setSawfr(moogFilterComponent.frSawSlider.getValue());
+        };
+
+    moogFilterComponent.frPulseSlider.onValueChange = [this] {
+        audioProcessor.setPulsefr(moogFilterComponent.frPulseSlider.getValue());
+        };
+
+    moogFilterComponent.resSquareSlider.onValueChange = [this] {
+        audioProcessor.setSquareres(moogFilterComponent.resSquareSlider.getValue());
+        };
+
+    moogFilterComponent.resSawSlider.onValueChange = [this] {
+        audioProcessor.setSawres(moogFilterComponent.resSawSlider.getValue());
+        };
+
+    moogFilterComponent.resPulseSlider.onValueChange = [this] {
+        audioProcessor.setPulseres(moogFilterComponent.resPulseSlider.getValue());
+        };
 }
 
 void MonoSynthAudioProcessorEditor::reverbValueChange()
