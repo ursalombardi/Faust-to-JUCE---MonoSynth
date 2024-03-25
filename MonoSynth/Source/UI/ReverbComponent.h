@@ -29,14 +29,14 @@ public:
         createKnob(modDepthSlider, modDepthLabel, 0.0, 0.0, 1, 0.01);
         createKnob(modFreqSlider, modFreqLabel, 1, 0, 10, 0.01);
         createKnob(dryWetMixSlider, dryWetMixLabel, 0.5, 0, 1, 0.01);
-        createLabel(dtLabel, "DT:");
-        createLabel(dampLabel, "Damp:");
-        createLabel(sizeLabel, "Size:");
-        createLabel(earlyDiffLabel, "Early Diff:");
-        createLabel(feedbackLabel, "Feedback:");
-        createLabel(modDepthLabel, "Mod Depth:");
-        createLabel(modFreqLabel, "Mod Freq:");
-        createLabel(dryWetMixLabel, "Dry/Wet Mix:");
+        createLabel(dtLabel, "Time");
+        createLabel(dampLabel, "Damp");
+        createLabel(sizeLabel, "Size");
+        createLabel(earlyDiffLabel, "Diffusion");
+        createLabel(feedbackLabel, "Feedback");
+        createLabel(modDepthLabel, "Mod Depth");
+        createLabel(modFreqLabel, "Mod Freq");
+        createLabel(dryWetMixLabel, "Dry/Wet");
     }
 
     ~ReverbComponent() override
@@ -54,21 +54,33 @@ public:
     void paint (juce::Graphics& g) override
     {
         g.setColour(juce::Colours::grey);
-        g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
+        //g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
     }
 
     void resized() override
     {
-
         float reverbSliderSize = 90;
-        dtSlider.setBounds(0, 75, reverbSliderSize, reverbSliderSize);
-        dampSlider.setBounds(125, 75, reverbSliderSize, reverbSliderSize);
-        sizeSlider.setBounds(250, 75, reverbSliderSize, reverbSliderSize);
-        earlyDiffSlider.setBounds(375, 75, reverbSliderSize, reverbSliderSize);
-        feedbackSlider.setBounds(0,  200, reverbSliderSize, reverbSliderSize);
+       
+        dtSlider.setBounds(0, 90, reverbSliderSize, reverbSliderSize);
+        dtLabel.setBounds(dtSlider.getX(), dtSlider.getY() + dtSlider.getHeight(), 90, 20);
+        
+        sizeSlider.setBounds(125, 90, reverbSliderSize, reverbSliderSize);
+        sizeLabel.setBounds(sizeSlider.getX(), sizeSlider.getY() + sizeSlider.getHeight(), 90, 20);
+
+        earlyDiffSlider.setBounds(250, 90, reverbSliderSize, reverbSliderSize);
+        earlyDiffLabel.setBounds(earlyDiffSlider.getX(), earlyDiffSlider.getY() + earlyDiffSlider.getHeight(), 90, 20);
+
+        feedbackSlider.setBounds(0, 200, reverbSliderSize, reverbSliderSize);
+        feedbackLabel.setBounds(feedbackSlider.getX(), feedbackSlider.getY() + feedbackSlider.getHeight(), 90, 20);
+
         modDepthSlider.setBounds(125, 200, reverbSliderSize, reverbSliderSize);
+        modDepthLabel.setBounds(modDepthSlider.getX(), modDepthSlider.getY() + modDepthSlider.getHeight(), 90, 20);
+
         modFreqSlider.setBounds(250, 200, reverbSliderSize, reverbSliderSize);
+        modFreqLabel.setBounds(modFreqSlider.getX(), modFreqSlider.getY() + modFreqSlider.getHeight(), 90, 20);
+
         dryWetMixSlider.setBounds(375, 200, reverbSliderSize, reverbSliderSize);
+        dryWetMixLabel.setBounds(dryWetMixSlider.getX(), dryWetMixSlider.getY() + dryWetMixSlider.getHeight(), 90, 20);
     }
 
     void createKnob(juce::Slider& slider, juce::Label& label, double initialValue, double minRange, double maxRange, double increment) 
@@ -85,6 +97,7 @@ public:
     {
         addAndMakeVisible(label);
         label.setText(text, juce::NotificationType::dontSendNotification);
+        label.setJustificationType(juce::Justification::centredTop);
     }
 
     juce::Slider dtSlider;

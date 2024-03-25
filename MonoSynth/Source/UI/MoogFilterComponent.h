@@ -53,30 +53,30 @@ public:
     void paint (juce::Graphics& g) override
     {
         g.setColour (juce::Colours::grey);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+        //g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
     }
 
     void resized() override
     {
 
-        frMainSlider.setBounds(25, 0, 125, 125);
-        resMainSlider.setBounds(150 + 35, 75, 55, 55);
+        frMainSlider.setBounds(97 - 125/2, 1, 125, 125);
+        resMainSlider.setBounds(150 + 10, 76, 55, 55);
 
         float smallKnobSize = 45;
         float leftOffSet = 25;
 
-        indexSquareSlider.setBounds(leftOffSet, 200, smallKnobSize+10, smallKnobSize+10);
-        frSquareSlider.setBounds(leftOffSet+5, 275, smallKnobSize, smallKnobSize);
-        resSquareSlider.setBounds(leftOffSet+10, 340, smallKnobSize - 10, smallKnobSize - 10);
+        indexSquareSlider.setBounds(leftOffSet+10, 200, smallKnobSize+10, smallKnobSize+10);
+        frSquareSlider.setBounds(leftOffSet+5+10, 275, smallKnobSize, smallKnobSize);
+        resSquareSlider.setBounds(leftOffSet+10+10, 340, smallKnobSize - 10, smallKnobSize - 10);
 
         indexSawSlider.setBounds(leftOffSet + 90, 200, smallKnobSize+10, smallKnobSize + 10);
         frSawSlider.setBounds(leftOffSet + 95 , 275, smallKnobSize, smallKnobSize);
         resSawSlider.setBounds(leftOffSet + 100, 340, smallKnobSize - 10, smallKnobSize - 10);
 
-        indexPulseSlider.setBounds(leftOffSet + 180, 200, smallKnobSize + 10, smallKnobSize + 10);
-        frPulseSlider.setBounds(leftOffSet + 185, 275, smallKnobSize, smallKnobSize);
-        resPulseSlider.setBounds(leftOffSet + 190, 340, smallKnobSize - 10, smallKnobSize-10);
+        indexPulseSlider.setBounds(leftOffSet + 180 -10, 200, smallKnobSize + 10, smallKnobSize + 10);
+        frPulseSlider.setBounds(leftOffSet + 185 - 10, 275, smallKnobSize, smallKnobSize);
+        resPulseSlider.setBounds(leftOffSet + 190 - 10, 340, smallKnobSize - 10, smallKnobSize-10);
 
     }
 

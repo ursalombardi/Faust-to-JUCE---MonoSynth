@@ -19,9 +19,8 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     setSize(800, 500);
     startTimer(100);
 
-    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::fogwall_png, BinaryData::fogwall_pngSize);
-    juce::Font Algerian("Algerian", 20.f, 0);
-    juce::Font AgencyFB("Agency FB", 20.f, 0);
+    backgroundImage = juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
+    constructionImage = juce::ImageCache::getFromMemory(BinaryData::construction_png, BinaryData::construction_pngSize);
   
     int controlTextBoxWidth = 80;
 
@@ -74,33 +73,48 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     addAndMakeVisible(attackSlider);
     attackSlider.setRange(0.01, 7.0);
     attackSlider.setValue(0.01);
-    attackSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    attackSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    attackSlider.setColour(juce::Slider::trackColourId,juce::Colours::indianred);
+    attackSlider.setNumDecimalPlacesToDisplay(2);
+    attackSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 20, 20);
     attackSlider.onValueChange = [this] {
         audioProcessor.setAttack(attackSlider.getValue());
         };
+    addAndMakeVisible(attackLabel);
+    attackLabel.setText("Attack", juce::NotificationType::dontSendNotification);
+    attackLabel.setJustificationType(juce::Justification::centredLeft);
+
 
     addAndMakeVisible(releaseSlider);
     releaseSlider.setRange(0.01, 5.0);
     releaseSlider.setValue(0.01);
-    releaseSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    releaseSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    releaseSlider.setColour(juce::Slider::trackColourId, juce::Colours::darkslateblue);
+    releaseSlider.setNumDecimalPlacesToDisplay(2);
     releaseSlider.onValueChange = [this] {
         audioProcessor.setRelease(releaseSlider.getValue());
         };
+    addAndMakeVisible(releaseLabel);
+    releaseLabel.setText("Release", juce::NotificationType::dontSendNotification);
+    releaseLabel.setJustificationType(juce::Justification::centredLeft);
 
     // Tremelo Slider
     addAndMakeVisible(tremSlider);
     tremSlider.setRange(0.0, 6.0);
     tremSlider.setValue(0.0);
-    tremSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     tremSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    tremSlider.setColour(juce::Slider::trackColourId, juce::Colours::darkgreen);
+    tremSlider.setNumDecimalPlacesToDisplay(2);
     tremSlider.onValueChange = [this] {
-
         audioProcessor.setTremeloRate(tremSlider.getValue());
         if (tremSlider.getValue() > 0.0)
             audioProcessor.setTremeloGate(true);
         else
             audioProcessor.setTremeloGate(false);
         };   
+    addAndMakeVisible(tremLabel);
+    tremLabel.setText("Trem", juce::NotificationType::dontSendNotification);
+    tremLabel.setJustificationType(juce::Justification::centredTop);
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
@@ -113,22 +127,22 @@ void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
 
-    // King Giles  
-
     g.drawImageAt(backgroundImage, 0, 0);
 
-    juce::Rectangle<int> bounds = getLocalBounds();
+    //juce::Rectangle<int> bounds = getLocalBounds();
 
-    // Define the colors for the sunset gradient
-    juce::Colour color1 = juce::Colour::fromFloatRGBA(0.1f, 0.1f, 0.2f, 1.0f); // Dark navy blue
-    juce::Colour color2 = juce::Colour::fromFloatRGBA(0.2f, 0.2f, 0.3f, 0.9f); // Light gray
+    //// Define the colors for the sunset gradient
+    //juce::Colour color1 = juce::Colour::fromFloatRGBA(0.1f, 0.1f, 0.2f, 1.0f); // Dark navy blue
+    //juce::Colour color2 = juce::Colour::fromFloatRGBA(0.2f, 0.2f, 0.3f, 0.9f); // Light gray
 
-    // Create a LinearGradient object for the gradient
-    juce::ColourGradient gradient(color1, 0, 0, color2, 0, static_cast<float>(bounds.getHeight()), false);
+    //// Create a LinearGradient object for the gradient
+    //juce::ColourGradient gradient(color1, 0, 0, color2, 0, static_cast<float>(bounds.getHeight()), false);
 
-    // Fill the background with the gradient
-    g.setGradientFill(gradient);
+    //// Fill the background with the gradient
+    //g.setColour(juce::Colours::green);
     //g.fillRect(bounds);
+
+    g.drawImageAt(constructionImage, 800 - 126, 500 -149);
 
 }
 
@@ -138,13 +152,20 @@ void MonoSynthAudioProcessorEditor::resized()
     int topOffset = 45;
     int mainControlSize = 100;
 
-    moogFilterComponent.setBounds(0, 100, 400, 400);
-    reverbComponent.setBounds(300, 0, 500, 350);
-    attackSlider.setBounds(300, 380, 200, 20);
-    releaseSlider.setBounds(300, 430, 200, 20);
-    tremSlider.setBounds(550, 375, 30, 100);
+    moogFilterComponent.setBounds(0, 100, 300, 400);
+    
+    reverbComponent.setBounds(300, 45-40, 500, 350);
+    
+    attackSlider.setBounds(310, 360, 200, 30);
+    attackLabel.setBounds(attackSlider.getX(), attackSlider.getY() + attackSlider.getHeight(), 200, 20);
+    
+    releaseSlider.setBounds(310, 420, 200, 30);
+    releaseLabel.setBounds(releaseSlider.getX(), releaseSlider.getY() + releaseSlider.getHeight(), 200, 20);
+    
+    tremSlider.setBounds(560, 360, 60, 90);
+    tremLabel.setBounds(tremSlider.getX(), tremSlider.getY() + tremSlider.getHeight(), 60, 20);
 
-    knobRandomizer.setBounds(700, 470, 100, 30);
+    //knobRandomizer.setBounds(700, 470, 100, 30);
 }
 
 void MonoSynthAudioProcessorEditor::timerCallback()

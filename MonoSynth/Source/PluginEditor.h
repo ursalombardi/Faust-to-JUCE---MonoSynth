@@ -44,8 +44,14 @@ private:
     juce::Slider releaseSlider;
     juce::Slider tremSlider;
 
+    // Labels
+    juce::Label attackLabel;
+    juce::Label releaseLabel;
+    juce::Label tremLabel;
+
     // Images
     juce::Image backgroundImage;
+    juce::Image constructionImage;
 
     void timerCallback() final;
 
