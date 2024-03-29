@@ -216,27 +216,6 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
        
         if (message.isController()) {
             DBG(message.getControllerNumber() << " " << message.getControllerValue());
-            
-            if (message.getControllerNumber() == 74)
-            {
-                controllerValueFreq1 = message.getControllerValue();
-                controllerFlagFreq1 = true;
-            }
-            if (message.getControllerNumber() == 71)
-            {
-                controllerValueFreq2 = message.getControllerValue();
-                controllerFlagFreq2 = true;
-            }
-            if (message.getControllerNumber() == 20)
-            {
-                controllerValueRes1 = message.getControllerValue();
-                controllerFlagRes1 = true;
-            }
-            if (message.getControllerNumber() == 21)
-            {
-                controllerValueRes2 = message.getControllerValue();
-                controllerFlagRes2 = true;
-            }
         }
 
         if (message.isNoteOff())
@@ -300,10 +279,6 @@ void MonoSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 
 void MonoSynthAudioProcessor::randomizeControllerValues()
 {
-    moogFreq1 = getRandomDoubleInRange(200.0, 4000.0);
-    moogFreq2 = getRandomDoubleInRange(200.0, 4000.0);
-    moogRes1 = getRandomDoubleInRange(0.0, 1.0);
-    moogRes2 = getRandomDoubleInRange(0.0, 1.0);
 }
 
 double MonoSynthAudioProcessor::getRandomDoubleInRange(double min, double max)
@@ -363,10 +338,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MonoSynthAudioProcessor::cre
                 std::make_unique<juce::AudioParameterFloat>("RESPULSE", "Res Pulse", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.05f),
                 // Reverb 
                 std::make_unique<juce::AudioParameterFloat>("DT", "Time", juce::NormalisableRange<float> { 0.1f, 60.0f, 0.01}, 0.01f),
-                std::make_unique<juce::AudioParameterFloat>("DAMP", "Damp", juce::NormalisableRange<float> { 0.1f, 60.0f, 0.01}, 0.01f),
+                //std::make_unique<juce::AudioParameterFloat>("DAMP", "Damp", juce::NormalisableRange<float> { 0.1f, 60.0f, 0.01}, 0.01f),
                 std::make_unique<juce::AudioParameterFloat>("SIZE", "Size", juce::NormalisableRange<float> { 1.0f, 3.0f, 0.01}, 0.5f),
                 std::make_unique<juce::AudioParameterFloat>("EARLYDIFF", "Early Diff", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.0f),
-                std::make_unique<juce::AudioParameterFloat>("FEEDBACK", "Feedback", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f}, 1.0f),
+                std::make_unique<juce::AudioParameterFloat>("FEEDBACK", "Feedback", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f}, 0.25f),
                 std::make_unique<juce::AudioParameterFloat>("MODDEPTH", "Mod Depth", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.0f),
                 std::make_unique<juce::AudioParameterFloat>("MODFREQ", "Mod Freq", juce::NormalisableRange<float> { 0.0f, 10.0f, 0.01}, 1.0f),
                 std::make_unique<juce::AudioParameterFloat>("DRYWETMIX", "Dry Wet Mix", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.5f),
@@ -375,6 +350,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout MonoSynthAudioProcessor::cre
                 std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> { 0.1f, 6.0f, 0.01}, 0.01f),
                 //// Tremelo
                 std::make_unique<juce::AudioParameterFloat>("TREMELO", "Tremelo", juce::NormalisableRange<float> { 0.0f, 6.0f, 0.01}, 0.00f),
-
     };
 }

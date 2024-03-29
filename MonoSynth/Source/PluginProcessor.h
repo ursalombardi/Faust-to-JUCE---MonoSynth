@@ -72,30 +72,7 @@ public:
     // Tremelo
     void setTremeloRate(float trem);
     void setTremeloGate(bool tremgate);
-
-    // Midi
-    int noteNumber;
-    double pitchWheelValue = 8192.0;
-    double noteNumberInHertz;
-    int currentNoteNumber;
-    double currentNoteInHertz = 300.0;
-    double pitchWheelMultiplier = 1;
-    double sustainPedalMulitplier = 1;
-    std::vector<int> activeNoteNumbers;
     
-    // Midi Controls for main knobs
-    double moogFreq1 = 800.0;
-    double moogFreq2 = 2000.0;
-    double moogRes1 = 0.5;
-    double moogRes2 = 0.7;
-    double controllerValueFreq1 = 200.0;
-    double controllerValueFreq2= 2000.0;
-    double controllerValueRes1 = 0.5;
-    double controllerValueRes2 = 0.7;
-    bool controllerFlagFreq1 = false;
-    bool controllerFlagFreq2 = false;
-    bool controllerFlagRes1 = false;
-    bool controllerFlagRes2 = false;
     void randomizeControllerValues();
     double getRandomDoubleInRange(double min, double max);
     
@@ -105,11 +82,20 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
 private:
-
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     MapUI* fUI;
     dsp* fDSP;
     float** outputs; // double array (one dimension for audio channels and one for audio samples/buffers)
+
+    // Midi
+    int noteNumber = 0;
+    double pitchWheelValue = 8192.0;
+    double noteNumberInHertz = 0;
+    int currentNoteNumber = 0;
+    double currentNoteInHertz = 0.0;
+    double pitchWheelMultiplier = 1;
+    double sustainPedalMulitplier = 1;
+    std::vector<int> activeNoteNumbers;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoSynthAudioProcessor)
