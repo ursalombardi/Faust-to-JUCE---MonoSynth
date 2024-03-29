@@ -13,51 +13,13 @@
 //==============================================================================
 MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProcessor& p)
     : AudioProcessorEditor(&p), 
-    audioProcessor(p),
-    moogFilterComponent(audioProcessor.apvts, "MAINFR")
+    audioProcessor(p)
 {
     setSize(800, 500);
     startTimer(100);
 
     backgroundImage = juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     constructionImage = juce::ImageCache::getFromMemory(BinaryData::construction_png, BinaryData::construction_pngSize);
-
-    addAndMakeVisible(knobRandomizer);
-    knobRandomizer.setButtonText("Random");
-    knobRandomizer.onClick = [this] {
-        setControllerFlagsFalse();
-        audioProcessor.randomizeControllerValues();
-
-        //audioProcessor.setMainfr(audioProcessor.moogFreq1);
-        //moogfrSlider.setValue(audioProcessor.moogFreq1);
-
-        audioProcessor.setSquarefr(audioProcessor.moogFreq2);
-        //moogfrSlider2.setValue(audioProcessor.moogFreq2);
-
-        audioProcessor.setMainres(audioProcessor.moogRes1);
-        //moogResSlider.setValue(audioProcessor.moogRes1);
-
-        audioProcessor.setSquareres(audioProcessor.moogRes2);
-        //moogResSlider2.setValue(audioProcessor.moogRes2);
-        };
-
-    // Freqency 
-    addAndMakeVisible(frequencySlider);
-    frequencySlider.setRange(50.0, 5000.0, 29.92);
-    frequencySlider.setNumDecimalPlacesToDisplay(2);
-    frequencySlider.setSkewFactorFromMidPoint(500.0);
-    frequencySlider.setValue(200);
-    frequencySlider.onValueChange = [this] {
-        audioProcessor.setFreq(frequencySlider.getValue());
-        };
-
-    // Gain
-    addAndMakeVisible(gainSlider);
-    gainSlider.setRange(0.0, 1.0);
-    gainSlider.setValue(0.5);
-    gainSlider.onValueChange = [this] {
-        audioProcessor.setGain(gainSlider.getValue());
-        };
 
     // Moog Filter Component
     addAndMakeVisible(moogFilterComponent);
@@ -77,6 +39,13 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     // Reverb Component
     addAndMakeVisible(reverbComponent);
     reverbValueChange();
+    connectAttachment(dtAttachment, audioProcessor.apvts, "DT", reverbComponent.dtSlider);
+    connectAttachment(sizeAttachment, audioProcessor.apvts, "SIZE", reverbComponent.sizeSlider);
+    connectAttachment(earlyDiffAttachment, audioProcessor.apvts, "EARLYDIFF", reverbComponent.earlyDiffSlider);
+    connectAttachment(feedbackAttachment, audioProcessor.apvts, "FEEDBACK", reverbComponent.feedbackSlider);
+    connectAttachment(modDepthAttachment, audioProcessor.apvts, "MODDEPTH", reverbComponent.modDepthSlider);
+    connectAttachment(modFreqAttachment, audioProcessor.apvts, "MODFREQ", reverbComponent.modFreqSlider);
+    connectAttachment(dryWetMixAttachment, audioProcessor.apvts, "DRYWETMIX", reverbComponent.dryWetMixSlider);
 
     // AR Sliders
     addAndMakeVisible(attackSlider);
@@ -137,25 +106,8 @@ MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
 //==============================================================================
 void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-
     g.drawImageAt(backgroundImage, 0, 0);
-
-    //juce::Rectangle<int> bounds = getLocalBounds();
-
-    //// Define the colors for the sunset gradient
-    //juce::Colour color1 = juce::Colour::fromFloatRGBA(0.1f, 0.1f, 0.2f, 1.0f); // Dark navy blue
-    //juce::Colour color2 = juce::Colour::fromFloatRGBA(0.2f, 0.2f, 0.3f, 0.9f); // Light gray
-
-    //// Create a LinearGradient object for the gradient
-    //juce::ColourGradient gradient(color1, 0, 0, color2, 0, static_cast<float>(bounds.getHeight()), false);
-
-    //// Fill the background with the gradient
-    //g.setColour(juce::Colours::green);
-    //g.fillRect(bounds);
-
     g.drawImageAt(constructionImage, 800 - 126, 500 -149);
-
 }
 
 void MonoSynthAudioProcessorEditor::resized()
@@ -165,7 +117,6 @@ void MonoSynthAudioProcessorEditor::resized()
     int mainControlSize = 100;
 
     moogFilterComponent.setBounds(0, 100, 300, 400);
-    
     reverbComponent.setBounds(300, 45-40, 500, 350);
     
     attackSlider.setBounds(310, 360, 200, 30);
@@ -176,8 +127,6 @@ void MonoSynthAudioProcessorEditor::resized()
     
     tremSlider.setBounds(560, 360, 60, 90);
     tremLabel.setBounds(tremSlider.getX(), tremSlider.getY() + tremSlider.getHeight(), 60, 20);
-
-    //knobRandomizer.setBounds(700, 470, 100, 30);
 }
 
 void MonoSynthAudioProcessorEditor::timerCallback()

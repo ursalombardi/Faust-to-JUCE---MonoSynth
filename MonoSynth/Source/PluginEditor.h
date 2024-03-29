@@ -76,12 +76,19 @@ private:
     std::unique_ptr<Attachment> resSawAttachment;
     std::unique_ptr<Attachment> resPulseAttachment;
     // Reverb 
+    std::unique_ptr<Attachment> dtAttachment;
+    std::unique_ptr<Attachment> dampAttachment;
+    std::unique_ptr<Attachment> sizeAttachment;
+    std::unique_ptr<Attachment> earlyDiffAttachment;
+    std::unique_ptr<Attachment> feedbackAttachment;
+    std::unique_ptr<Attachment> modDepthAttachment;
+    std::unique_ptr<Attachment> modFreqAttachment;
+    std::unique_ptr<Attachment> dryWetMixAttachment;
     // AR
     std::unique_ptr<Attachment> attackAttachment;
     std::unique_ptr<Attachment> releaseAttachment;
     // Other
     std::unique_ptr<Attachment> tremeloAttachment;
-
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

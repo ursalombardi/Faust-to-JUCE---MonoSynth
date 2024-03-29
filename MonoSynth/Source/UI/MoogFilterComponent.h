@@ -19,7 +19,7 @@
 class MoogFilterComponent  : public juce::Component
 {
 public:
-    MoogFilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String paramId)
+    MoogFilterComponent()
     {
         createKnob(frMainSlider, 200, 200, 4000, 0.01);
         createKnob(resMainSlider, 0.70, 0, 1.00, 0.01);
@@ -59,7 +59,6 @@ public:
 
     void resized() override
     {
-
         frMainSlider.setBounds(97 - 125/2, 1, 125, 125);
         resMainSlider.setBounds(150 + 10, 76, 55, 55);
 
