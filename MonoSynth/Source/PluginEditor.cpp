@@ -12,17 +12,15 @@
 
 //==============================================================================
 MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProcessor& p)
-    : AudioProcessorEditor(&p), audioProcessor(p)
+    : AudioProcessorEditor(&p), 
+    audioProcessor(p),
+    moogFilterComponent(audioProcessor.apvts, "MAINFR")
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
     setSize(800, 500);
     startTimer(100);
 
     backgroundImage = juce::ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     constructionImage = juce::ImageCache::getFromMemory(BinaryData::construction_png, BinaryData::construction_pngSize);
-  
-    int controlTextBoxWidth = 80;
 
     addAndMakeVisible(knobRandomizer);
     knobRandomizer.setButtonText("Random");
@@ -64,6 +62,17 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     // Moog Filter Component
     addAndMakeVisible(moogFilterComponent);
     moogFilterValueChange();
+    connectAttachment(frMainAttachment, audioProcessor.apvts, "FRMAIN", moogFilterComponent.frMainSlider);
+    connectAttachment(resMainAttachment, audioProcessor.apvts, "RESMAIN", moogFilterComponent.resMainSlider);
+    connectAttachment(indexSquareAttachment, audioProcessor.apvts, "INDEXSQUARE", moogFilterComponent.indexSquareSlider);
+    connectAttachment(indexSawAttachment, audioProcessor.apvts, "INDEXSAW", moogFilterComponent.indexSawSlider);
+    connectAttachment(indexPulseAttachment, audioProcessor.apvts, "INDEXPULSE", moogFilterComponent.indexPulseSlider);
+    connectAttachment(frSquareAttachment, audioProcessor.apvts, "FREQSQUARE", moogFilterComponent.frSquareSlider);
+    connectAttachment(frSawAttachment, audioProcessor.apvts, "FREQSAW", moogFilterComponent.frSawSlider);
+    connectAttachment(frPulseAttachment, audioProcessor.apvts, "FREQPULSE", moogFilterComponent.frPulseSlider);
+    connectAttachment(resSquareAttachment, audioProcessor.apvts, "RESSQUARE", moogFilterComponent.resSquareSlider);
+    connectAttachment(resSawAttachment, audioProcessor.apvts, "RESSAW", moogFilterComponent.resSawSlider);
+    connectAttachment(resPulseAttachment, audioProcessor.apvts, "RESPULSE", moogFilterComponent.resPulseSlider);
 
     // Reverb Component
     addAndMakeVisible(reverbComponent);
@@ -83,6 +92,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     addAndMakeVisible(attackLabel);
     attackLabel.setText("Attack", juce::NotificationType::dontSendNotification);
     attackLabel.setJustificationType(juce::Justification::centredLeft);
+    connectAttachment(attackAttachment, audioProcessor.apvts, "ATTACK", attackSlider);
 
 
     addAndMakeVisible(releaseSlider);
@@ -97,6 +107,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     addAndMakeVisible(releaseLabel);
     releaseLabel.setText("Release", juce::NotificationType::dontSendNotification);
     releaseLabel.setJustificationType(juce::Justification::centredLeft);
+    connectAttachment(releaseAttachment, audioProcessor.apvts, "RELEASE", releaseSlider);
 
     // Tremelo Slider
     addAndMakeVisible(tremSlider);
@@ -115,6 +126,7 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     addAndMakeVisible(tremLabel);
     tremLabel.setText("Trem", juce::NotificationType::dontSendNotification);
     tremLabel.setJustificationType(juce::Justification::centredTop);
+    connectAttachment(tremeloAttachment, audioProcessor.apvts, "TREMELO", tremSlider);
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
@@ -258,4 +270,10 @@ void MonoSynthAudioProcessorEditor::reverbValueChange()
         audioProcessor.setReverbWetDry(reverbComponent.dryWetMixSlider.getValue());
         };
 
+}
+
+void MonoSynthAudioProcessorEditor::connectAttachment(std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>& attachment, juce::AudioProcessorValueTreeState& apvts,
+    juce::String paramID, juce::Slider& slider)
+{
+    attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID, slider);
 }

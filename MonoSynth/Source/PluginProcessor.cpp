@@ -24,7 +24,7 @@ MonoSynthAudioProcessor::MonoSynthAudioProcessor()
 #endif
         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-    )
+    ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {   
 }
@@ -346,3 +346,35 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new MonoSynthAudioProcessor();
 }
 
+juce::AudioProcessorValueTreeState::ParameterLayout MonoSynthAudioProcessor::createParameters()
+{
+    return juce::AudioProcessorValueTreeState::ParameterLayout{
+                // Moog Filters
+                std::make_unique<juce::AudioParameterFloat>("FRMAIN", "Main Frequency", juce::NormalisableRange<float> { 200.0f, 4000.0f, 0.01f }, 500.0f),
+                std::make_unique<juce::AudioParameterFloat>("RESMAIN", "Main Res", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f }, 0.7f),
+                std::make_unique<juce::AudioParameterFloat>("INDEXSQUARE", "Index Square", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f}, 0.65f),
+                std::make_unique<juce::AudioParameterFloat>("INDEXSAW", "Index Saw", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f}, 0.95f),
+                std::make_unique<juce::AudioParameterFloat>("INDEXPULSE", "Index Pulse", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f}, 0.2f),
+                std::make_unique<juce::AudioParameterFloat>("FREQSQUARE", "Freq Square", juce::NormalisableRange<float> { 200.0f, 4000.0f, 0.01f}, 2000.0f),
+                std::make_unique<juce::AudioParameterFloat>("FREQSAW", "Freq Saw", juce::NormalisableRange<float> { 200.0f, 4000.0f, 0.01f}, 2000.0f),
+                std::make_unique<juce::AudioParameterFloat>("FREQPULSE", "Freq Pulse", juce::NormalisableRange<float> { 200.0f, 4000.0f, 0.01f}, 2000.0f),
+                std::make_unique<juce::AudioParameterFloat>("RESSQUARE", "Res Square", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.05f),
+                std::make_unique<juce::AudioParameterFloat>("RESSAW", "Res Saw", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.05f),
+                std::make_unique<juce::AudioParameterFloat>("RESPULSE", "Res Pulse", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.05f),
+                // Reverb 
+                std::make_unique<juce::AudioParameterFloat>("DT", "Time", juce::NormalisableRange<float> { 0.1f, 60.0f, 0.01}, 0.01f),
+                std::make_unique<juce::AudioParameterFloat>("DAMP", "Damp", juce::NormalisableRange<float> { 0.1f, 60.0f, 0.01}, 0.01f),
+                std::make_unique<juce::AudioParameterFloat>("SIZE", "Size", juce::NormalisableRange<float> { 1.0f, 3.0f, 0.01}, 0.5f),
+                std::make_unique<juce::AudioParameterFloat>("EARLYDIFF", "Early Diff", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.0f),
+                std::make_unique<juce::AudioParameterFloat>("FEEDBACK", "Feedback", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01f}, 1.0f),
+                std::make_unique<juce::AudioParameterFloat>("MODDEPTH", "Mod Depth", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.0f),
+                std::make_unique<juce::AudioParameterFloat>("MODFREQ", "Mod Freq", juce::NormalisableRange<float> { 0.0f, 10.0f, 0.01}, 1.0f),
+                std::make_unique<juce::AudioParameterFloat>("DRYWETMIX", "Dry Wet Mix", juce::NormalisableRange<float> { 0.0f, 1.0f, 0.01}, 0.5f),
+                // AR
+                std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", juce::NormalisableRange<float> { 0.01f, 6.0f, 0.01}, 0.01f),
+                std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> { 0.1f, 6.0f, 0.01}, 0.01f),
+                //// Tremelo
+                std::make_unique<juce::AudioParameterFloat>("TREMELO", "Tremelo", juce::NormalisableRange<float> { 0.0f, 6.0f, 0.01}, 0.00f),
+
+    };
+}

@@ -19,7 +19,7 @@
 class MoogFilterComponent  : public juce::Component
 {
 public:
-    MoogFilterComponent()
+    MoogFilterComponent(juce::AudioProcessorValueTreeState& apvts, juce::String paramId)
     {
         createKnob(frMainSlider, 200, 200, 4000, 0.01);
         createKnob(resMainSlider, 0.70, 0, 1.00, 0.01);
@@ -27,7 +27,7 @@ public:
         createKnob(indexSawSlider, 0.95, 0.0, 1.0, 0.01);
         createKnob(indexPulseSlider, 0.2, 0.0, 1.0, 0.01);
         createKnob(frSquareSlider, 2000, 200, 4000, 0.01);
-        createKnob(frSawSlider, 2000, 200, 400, 0.01);
+        createKnob(frSawSlider, 2000, 200, 4000, 0.01);
         createKnob(frPulseSlider, 2000, 200, 4000, 0.01);
         createKnob(resSquareSlider, 0.05, 0, 1, 0.01);
         createKnob(resSawSlider, 0.05, 0, 1, 0.01);
@@ -88,6 +88,18 @@ public:
         slider.setRange(minRange, maxRange, increment);
         slider.setValue(initialValue);
         slider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    }
+
+    void createKnob2(juce::Slider& slider, double initialValue, double minRange, double maxRange, double increment,
+        juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>& attach)
+    {
+        addAndMakeVisible(slider);
+        slider.setLookAndFeel(&moogFilterLookAndFeel);
+        slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+        slider.setRange(minRange, maxRange, increment);
+        slider.setValue(initialValue);
+        slider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+        attach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramId, slider);
     }
 
     juce::Slider frMainSlider;

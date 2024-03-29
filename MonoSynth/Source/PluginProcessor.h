@@ -102,7 +102,11 @@ public:
     // Prevents crashes
     bool releaseResourcesFlag = false;
 
+    juce::AudioProcessorValueTreeState apvts;
+
 private:
+
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     MapUI* fUI;
     dsp* fDSP;
     float** outputs; // double array (one dimension for audio channels and one for audio samples/buffers)
