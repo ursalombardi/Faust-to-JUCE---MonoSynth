@@ -27,7 +27,9 @@ MonoSynthAudioProcessor::MonoSynthAudioProcessor()
     ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {   
-    apvts.state = juce::ValueTree("savedParams");
+    apvts.state.setProperty(PresetManager::presetNameProperty, "", nullptr);
+    apvts.state.setProperty("version", ProjectInfo::versionString, nullptr);
+    presetManager = std::make_unique<PresetManager>(apvts);
 }
 
 MonoSynthAudioProcessor::~MonoSynthAudioProcessor()
@@ -305,22 +307,19 @@ juce::AudioProcessorEditor* MonoSynthAudioProcessor::createEditor()
 //==============================================================================
 void MonoSynthAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    std::unique_ptr <juce::XmlElement> xml(apvts.state.createXml());
+    const auto state = apvts.copyState();
+    const auto xml(state.createXml());
     copyXmlToBinary(*xml, destData);
 
 }
 
 void MonoSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    std::unique_ptr <juce::XmlElement> params(getXmlFromBinary(data, sizeInBytes));
-
-    if (params != nullptr)
-    {
-        if (params->hasTagName(apvts.state.getType()))
-        {
-            apvts.state = juce::ValueTree::fromXml(*params);
-        }
-    }
+    const auto xmlState = getXmlFromBinary(data, sizeInBytes);
+    if (xmlState == nullptr)
+        return;
+    const auto newTree = juce::ValueTree::fromXml(*xmlState);
+    apvts.replaceState(newTree);
 }
 
 //==============================================================================

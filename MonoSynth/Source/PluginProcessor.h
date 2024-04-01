@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "PresetManager.h"
 #include <vector>
 #include <algorithm>
 
@@ -81,7 +82,11 @@ public:
 
     juce::AudioProcessorValueTreeState apvts;
 
+    PresetManager& getPresetManager() { return *presetManager; }
+
 private:
+    std::unique_ptr<PresetManager> presetManager;
+
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
     MapUI* fUI;
     dsp* fDSP;

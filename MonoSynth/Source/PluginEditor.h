@@ -13,6 +13,7 @@
 #include "UI/MyLookAndFeel.h"
 #include "UI/MoogFilterComponent.h"
 #include "UI/ReverbComponent.h"
+#include "UI/PresetComponent.h"
 
 
 //==============================================================================
@@ -33,8 +34,10 @@ public:
         juce::String paramID, juce::Slider& slider);
    
 private:
+    ReverbLookAndFeel reverbLookAndFeel;
     ReverbComponent reverbComponent;
     MoogFilterComponent moogFilterComponent;
+    PresetComponent presetComponent;
 
     // Sliders and Buttons
     juce::Slider frequencySlider; 
@@ -58,8 +61,6 @@ private:
 
     void timerCallback() final;
     void setControllerFlagsFalse();
-
-    ReverbLookAndFeel reverbLookAndFeel;
 
     // APVTS Attachment
     using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;

@@ -13,7 +13,8 @@
 //==============================================================================
 MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProcessor& p)
     : AudioProcessorEditor(&p), 
-    audioProcessor(p)
+    audioProcessor(p),
+    presetComponent(p.getPresetManager())
 {
     setSize(800, 500);
     startTimer(100);
@@ -63,7 +64,6 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     attackLabel.setJustificationType(juce::Justification::centredLeft);
     connectAttachment(attackAttachment, audioProcessor.apvts, "ATTACK", attackSlider);
 
-
     addAndMakeVisible(releaseSlider);
     releaseSlider.setRange(0.01, 5.0);
     releaseSlider.setValue(0.01);
@@ -96,6 +96,9 @@ MonoSynthAudioProcessorEditor::MonoSynthAudioProcessorEditor(MonoSynthAudioProce
     tremLabel.setText("Trem", juce::NotificationType::dontSendNotification);
     tremLabel.setJustificationType(juce::Justification::centredTop);
     connectAttachment(tremeloAttachment, audioProcessor.apvts, "TREMELO", tremSlider);
+
+    // Preset 
+    addAndMakeVisible(presetComponent);
 }
 
 MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
@@ -107,7 +110,7 @@ MonoSynthAudioProcessorEditor::~MonoSynthAudioProcessorEditor()
 void MonoSynthAudioProcessorEditor::paint(juce::Graphics& g)
 {
     g.drawImageAt(backgroundImage, 0, 0);
-    g.drawImageAt(constructionImage, 800 - 126, 500 -149);
+    //g.drawImageAt(constructionImage, 800 - 126, 500 -149);
 }
 
 void MonoSynthAudioProcessorEditor::resized()
@@ -118,6 +121,7 @@ void MonoSynthAudioProcessorEditor::resized()
 
     moogFilterComponent.setBounds(0, 100, 300, 400);
     reverbComponent.setBounds(300, 45-40, 500, 350);
+    presetComponent.setBounds(652, 339, 133, 154);
     
     attackSlider.setBounds(310, 360, 200, 30);
     attackLabel.setBounds(attackSlider.getX(), attackSlider.getY() + attackSlider.getHeight(), 200, 20);
