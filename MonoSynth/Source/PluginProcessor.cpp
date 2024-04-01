@@ -27,6 +27,7 @@ MonoSynthAudioProcessor::MonoSynthAudioProcessor()
     ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {   
+    apvts.state = juce::ValueTree("savedParams");
 }
 
 MonoSynthAudioProcessor::~MonoSynthAudioProcessor()
@@ -304,15 +305,22 @@ juce::AudioProcessorEditor* MonoSynthAudioProcessor::createEditor()
 //==============================================================================
 void MonoSynthAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    std::unique_ptr <juce::XmlElement> xml(apvts.state.createXml());
+    copyXmlToBinary(*xml, destData);
+
 }
 
 void MonoSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr <juce::XmlElement> params(getXmlFromBinary(data, sizeInBytes));
+
+    if (params != nullptr)
+    {
+        if (params->hasTagName(apvts.state.getType()))
+        {
+            apvts.state = juce::ValueTree::fromXml(*params);
+        }
+    }
 }
 
 //==============================================================================
