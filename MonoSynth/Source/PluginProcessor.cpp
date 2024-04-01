@@ -31,6 +31,7 @@ MonoSynthAudioProcessor::MonoSynthAudioProcessor()
 
 MonoSynthAudioProcessor::~MonoSynthAudioProcessor()
 {
+
 }
 
 // Basic
