@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="wh8Z1x" name="MonoSynth" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginCharacteristicsValue="pluginWantsMidiIn">
-  <MAINGROUP id="sLpa8u" name="MonoSynth">
+<JUCERPROJECT id="wh8Z1x" name="URSYNTH" useAppConfig="0" addUsingNamespaceToJuceHeader="0"
+              displaySplashScreen="1" jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
+              companyWebsite="URSYNTH" companyName="URSYNTH" companyCopyright="URSYNTH"
+              pluginFormats="buildStandalone,buildVST3" projectType="audioplug"
+              pluginVST3Category="Instrument,Synth">
+  <MAINGROUP id="sLpa8u" name="URSYNTH">
     <GROUP id="{555E4995-4E82-F9D1-5A24-96AB87B97885}" name="Source">
       <GROUP id="{8E6BE313-DB9C-B38E-1B79-D0A8F8F4DD41}" name="UI">
+        <FILE id="XBNBTI" name="PresetComponent.h" compile="0" resource="0"
+              file="Source/UI/PresetComponent.h"/>
+        <FILE id="F5N0sZ" name="MyLookAndFeel.cpp" compile="1" resource="0"
+              file="Source/UI/MyLookAndFeel.cpp"/>
+        <FILE id="zTHRuN" name="MyLookAndFeel.h" compile="0" resource="0" file="Source/UI/MyLookAndFeel.h"/>
         <FILE id="GWJtWT" name="MoogFilterComponent.h" compile="0" resource="0"
               file="Source/UI/MoogFilterComponent.h"/>
         <FILE id="Bnw1UD" name="ReverbComponent.h" compile="0" resource="0"
               file="Source/UI/ReverbComponent.h"/>
       </GROUP>
       <FILE id="Bs1Rbl" name="FaustSynth.h" compile="0" resource="0" file="Source/FaustSynth.h"/>
-      <FILE id="Fyro6p" name="MyLookAndFeel.cpp" compile="1" resource="0"
-            file="Source/MyLookAndFeel.cpp"/>
-      <FILE id="s6AIBw" name="MyLookAndFeel.h" compile="0" resource="0" file="Source/MyLookAndFeel.h"/>
       <FILE id="gfJX7G" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="f3QV7o" name="PluginProcessor.h" compile="0" resource="0"
@@ -22,6 +26,9 @@
       <FILE id="bG7nvZ" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="Ei0HND" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="ulvN6x" name="PresetManager.cpp" compile="1" resource="0"
+            file="Source/PresetManager.cpp"/>
+      <FILE id="MkxIzR" name="PresetManager.h" compile="0" resource="0" file="Source/PresetManager.h"/>
     </GROUP>
     <GROUP id="{7ABED26C-B874-2B30-861F-E7AE100EE165}" name="Image">
       <FILE id="b94olY" name="construction.png" compile="0" resource="1"
@@ -34,7 +41,6 @@
     </GROUP>
   </MAINGROUP>
   <MODULES>
-    <MODULE id="foleys_gui_magic" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -51,13 +57,14 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_midi_ci" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_osc" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="MonoSynth"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="MonoSynth"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MonoSynth" useRuntimeLibDLL="0"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="MonoSynth" useRuntimeLibDLL="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../JUCE/modules"/>
@@ -73,9 +80,9 @@
         <MODULEPATH id="juce_gui_basics" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_midi_ci" path="../../JUCE/modules"/>
-        <MODULEPATH id="foleys_gui_magic" path="../../GUI Magic/foleys_gui_magic/modules"/>
         <MODULEPATH id="juce_dsp" path="../../JUCE/modules"/>
         <MODULEPATH id="juce_cryptography" path="../../JUCE/modules"/>
+        <MODULEPATH id="juce_osc" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
